@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drummond</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+	<%= render :partial => "partials/navigation" %>
+
+	<div class="container">
+		<%if notice != nil && notice != ""%>
+			<div class="alert alert-info" role="alert" >
+				<p class=""><%= notice %></p>	
+			</div>
+		<%end%>
+		<%if alert != nil && alert != ""%>
+			<div class="alert alert-warning" role="alert">
+				<p class=""><%= alert %></p>
+			</div>
+		<%end%>
+		<%= yield %>	
+	</div>
+
+	
+
+</body>
+</html>

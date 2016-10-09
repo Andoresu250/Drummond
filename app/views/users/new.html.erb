@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <h2>Nuevo Usuario</h2>
+
+    <%= form_for @user, :url => { :action => "create" } do |f| %>
+      <div class="form-group">
+        <%= f.label :name, "Nombres" %><br />
+        <%= f.text_field :name, autofocus: true, placeholder:"Nombres" ,class:"form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :last_name, "Apellidos" %><br />
+        <%= f.text_field :last_name, autofocus: true, placeholder:"Apellidos" ,class:"form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :email %><br />
+        <%= f.email_field :email, autofocus: true, placeholder:"Email" ,class:"form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, "Contraseña" %>
+        <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br />
+        <%= f.password_field :password, autocomplete: "off", placeholder:"Contraseña" ,class:"form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirmar contraseña" %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "off", placeholder:"Confirmar contraseña" ,class:"form-control" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Crear usuario" ,class:"btn btn-primary"%>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+

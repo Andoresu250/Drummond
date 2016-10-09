@@ -1,0 +1,10 @@
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3">
+		<h1>Editar Equipo <i class="fa fa-plus-pincel" aria-hidden="true"></i> </h1>
+
+		<%= render 'form' , locals: {button_text: "Guardar Cambios"}%>
+		
+		<%= link_to 'Ver', @equipment %> |
+		<%= link_to 'Volver', equipment_index_path %>
+	</div>
+</div>

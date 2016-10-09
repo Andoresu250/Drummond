@@ -1,0 +1,12 @@
+<p>
+  <strong>Name:</strong>
+  <%= @equipment.name %>
+</p>
+
+<p>
+  <strong>Reference:</strong>
+  <%= @equipment.reference %>
+</p>
+
+<%= link_to 'Editar', edit_equipment_path(@equipment) %> |
+<%= link_to 'Volver', equipment_index_path %>

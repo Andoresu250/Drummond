@@ -1,0 +1,32 @@
+<%= form_for(@user, :url => { :action => "update_password" } ) do |f| %>
+	 <div class="row">
+      <div class="col-sm-6 col-sm-offset-3 form-box">
+        <div class="form-top">
+          <div class="form-top-left">
+            <h3>Cambio de contraseña</h3>
+                <p>Por favor ingresa tu nueva contraseña:</p>
+            </div>
+            <div class="form-top-right">
+                <i class="fa fa-key"></i>
+            </div>
+          </div>
+          <div class="form-bottom">
+            <form role="form" action="" method="post" class="login-form">              
+              <div class="form-group">
+                <%= f.label :password, autocomplete: "off", class:"sr-only" %>                                      
+                <%= f.password_field :password, autocomplete: "off", placeholder:"Contraseña (Minimo 8 caracteres)...", class:"form-password form-control" %>
+              </div>
+              <div class="form-group">
+                <%= f.label :password_confirmation, autocomplete: "off", class:"sr-only" %>                                      
+                <%= f.password_field :password_confirmation, autocomplete: "off", placeholder:"Confirmacion de contraseña", class:"form-password form-control" %>
+              </div>
+              <div class="row"> 
+                <div class="col-md-12">
+                  <%= f.submit "Cambiar contraseña", class:"btn btn-primary btn-block pull-right" %>    
+                </div>              
+              </div>          
+            </form>
+          </div>
+      </div>
+    </div>        
+<% end %>

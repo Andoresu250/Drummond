@@ -1,0 +1,27 @@
+<h1>Lista de Usuarios</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nombres</th>
+      <th>Apellidos</th>
+      <th>Email</th>
+      <th>Tipo</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.last_name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.permission_level %></td>         
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Usuario'.html_safe, new_users_admin_path, :class => "btn btn-primary" %>

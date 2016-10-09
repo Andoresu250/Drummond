@@ -1,0 +1,31 @@
+<h1>Lista de Equipos</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Referencia</th>
+      <th>Nombre</th>
+      <th> Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @equipment.each do |equipment| %>
+      <tr>
+        <td><%= equipment.reference %></td>
+        <td><%= equipment.name %></td> 
+        <td>
+          <div class="row">
+            <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, vehicle_path(equipment), :class => "btn btn-info" %>
+            <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_vehicle_path(equipment), :class => "btn btn-warning" %>
+            <%= link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe, equipment , :class => "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+          </div>
+        </td>       
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Equipo'.html_safe, new_equipment_path, :class => "btn btn-primary" %>

@@ -1,0 +1,12 @@
+<p>
+  <strong>Name:</strong>
+  <%= @vehicle.name %>
+</p>
+
+<p>
+  <strong>Reference:</strong>
+  <%= @vehicle.reference %>
+</p>
+
+<%= link_to 'Editar', edit_vehicle_path(@vehicle) %> |
+<%= link_to 'Volver', vehicles_path %>
