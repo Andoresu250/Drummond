@@ -17,11 +17,11 @@ class UsersController < ApplicationController
   def create
       @user = User.new(user_params)
       puts "---------------------------------------------"
+      puts params
       puts user_params
-      puts @user.name
-      puts @user.last_name
       puts @user.email
       puts @user.permission_level
+      #puts @user.cc
       if @user.save
           redirect_to users_admin_index_path, notice: "Usuario creado satisfactoriamente" 
       else
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
-  def update_password
+    def update_password
     @user = User.find(current_user.id)
     if @user.update(user_params_edit_pass)
       # Sign in the user by passing validation in case their password changed

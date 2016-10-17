@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161009191250) do
+ActiveRecord::Schema.define(version: 20161017013158) do
 
   create_table "equipment", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -31,15 +31,15 @@ ActiveRecord::Schema.define(version: 20161009191250) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",     limit: 255
     t.string   "last_sign_in_ip",        limit: 255
-    t.string   "name",                   limit: 255, default: "", null: false
-    t.string   "last_name",              limit: 255, default: "", null: false
     t.integer  "permission_level",       limit: 4,   default: 1,  null: false
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
+    t.integer  "worker_id",              limit: 4
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["worker_id"], name: "fk_rails_79dca46b80", using: :btree
 
   create_table "vehicles", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -50,4 +50,14 @@ ActiveRecord::Schema.define(version: 20161009191250) do
 
   add_index "vehicles", ["reference"], name: "index_vehicles_on_reference", unique: true, using: :btree
 
+  create_table "workers", force: :cascade do |t|
+    t.string   "first_name", limit: 255
+    t.string   "last_name",  limit: 255
+    t.integer  "cc",         limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "code",       limit: 255
+  end
+
+  add_foreign_key "users", "workers"
 end

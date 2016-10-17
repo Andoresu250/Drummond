@@ -3,10 +3,26 @@
     <h2>Nuevo Usuario</h2>
 
     <%= form_for @user, :url => { :action => "create" } do |f| %>
+
+      <div class="form-group">
+        <%= label_tag :cc, "Cedula"  %><br />
+        <%= text_field_tag :cc , nil , placeholder:"Cedula" ,class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= label_tag :first_name, "Nombres"  %><br />
+        <%= text_field_tag :first_name , nil , placeholder:"Nombres" ,class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= label_tag :last_name, "Apellidos"  %><br />
+        <%= text_field_tag :last_name , nil , placeholder:"Apellidos" ,class: "form-control" %>
+      </div>
+
       <div class="form-group">
         <%= f.label :name, "Nombres" %><br />
         <%= f.text_field :name, autofocus: true, placeholder:"Nombres" ,class:"form-control" %>
-      </div>
+      </div>      
 
       <div class="form-group">
         <%= f.label :last_name, "Apellidos" %><br />

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :workers
   resources :equipment
   resources :vehicles  
   devise_for :users
