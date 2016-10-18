@@ -21,6 +21,7 @@
 
           <% if  current_user.is_admin?%>                         
             <li> <%= link_to "Usuarios", users_admin_index_path %> </li>
+            <li> <%= link_to "Trabajadores", workers_path %> </li>
           <% end %>
 
             <li> <%= link_to "Vehiculos", vehicles_path %> </li>

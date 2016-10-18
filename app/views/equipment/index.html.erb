@@ -3,8 +3,7 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Referencia</th>
-      <th>Nombre</th>
+      <th>Referencia</th>      
       <th> Acciones</th>
     </tr>
   </thead>
@@ -12,8 +11,7 @@
   <tbody>
     <% @equipment.each do |equipment| %>
       <tr>
-        <td><%= equipment.reference %></td>
-        <td><%= equipment.name %></td> 
+        <td><%= equipment.reference %></td>        
         <td>
           <div class="row">
             <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, vehicle_path(equipment), :class => "btn btn-info" %>

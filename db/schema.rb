@@ -11,13 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017013158) do
+ActiveRecord::Schema.define(version: 20161017214149) do
 
   create_table "equipment", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "reference",  limit: 4
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "reference",  limit: 255
   end
 
   create_table "users", force: :cascade do |t|
@@ -42,13 +41,10 @@ ActiveRecord::Schema.define(version: 20161017013158) do
   add_index "users", ["worker_id"], name: "fk_rails_79dca46b80", using: :btree
 
   create_table "vehicles", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "reference",  limit: 4
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "reference",  limit: 255
   end
-
-  add_index "vehicles", ["reference"], name: "index_vehicles_on_reference", unique: true, using: :btree
 
   create_table "workers", force: :cascade do |t|
     t.string   "first_name", limit: 255

@@ -4,30 +4,38 @@
 
     <%= form_for @user, :url => { :action => "create" } do |f| %>
 
+      <% if (@user.errors.any? || @worker.errors.any?)%>
+        <div id="error_explanation">
+          <h2>No se pudo crear el Usuario por lo siguiente:</h2>
+
+          <ul>
+          <%if @worker.errors.any? %>
+            <% @worker.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          <% end %>
+          <%if @worker.errors.any? %>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
       <div class="form-group">
-        <%= label_tag :cc, "Cedula"  %><br />
-        <%= text_field_tag :cc , nil , placeholder:"Cedula" ,class: "form-control" %>
+        <%= label_tag "worker[cc]", "Cedula"  %><br />
+        <%= text_field_tag "worker[cc]" , nil , placeholder:"Cedula" ,class: "form-control" %>
       </div>
 
       <div class="form-group">
-        <%= label_tag :first_name, "Nombres"  %><br />
-        <%= text_field_tag :first_name , nil , placeholder:"Nombres" ,class: "form-control" %>
+        <%= label_tag "worker[first_name]", "Nombres"  %><br />
+        <%= text_field_tag "worker[first_name]" , nil , placeholder:"Nombres" ,class: "form-control" %>
       </div>
 
       <div class="form-group">
-        <%= label_tag :last_name, "Apellidos"  %><br />
-        <%= text_field_tag :last_name , nil , placeholder:"Apellidos" ,class: "form-control" %>
-      </div>
-
-      <div class="form-group">
-        <%= f.label :name, "Nombres" %><br />
-        <%= f.text_field :name, autofocus: true, placeholder:"Nombres" ,class:"form-control" %>
+        <%= label_tag "worker[last_name]", "Apellidos"  %><br />
+        <%= text_field_tag "worker[last_name]" , nil , placeholder:"Apellidos" ,class: "form-control" %>
       </div>      
-
-      <div class="form-group">
-        <%= f.label :last_name, "Apellidos" %><br />
-        <%= f.text_field :last_name, autofocus: true, placeholder:"Apellidos" ,class:"form-control" %>
-      </div>
 
       <div class="form-group">
         <%= f.label :email %><br />

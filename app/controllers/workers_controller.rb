@@ -1,6 +1,6 @@
 class WorkersController < ApplicationController
   before_action :set_worker, only: [:show, :edit, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /workers
   # GET /workers.json
   def index
@@ -69,6 +69,6 @@ class WorkersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def worker_params
-      params.require(:worker).permit(:first_name, :last_name, :cc)
+      params.require(:worker).permit(:first_name, :last_name, :cc, :code)
     end
 end

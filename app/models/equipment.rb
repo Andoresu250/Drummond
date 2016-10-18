@@ -1,6 +1,4 @@
-class Equipment < ActiveRecord::Base
-	validates :name, presence: true
+class Equipment < ActiveRecord::Base	
 	validates :reference, presence: true
-	validates :reference, uniqueness: true
-	validates :reference, :numericality => {:only_integer => true}
+	validates :reference, uniqueness: true	
 end

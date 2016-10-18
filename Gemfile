@@ -30,6 +30,8 @@ gem 'font-awesome-sass'
 #Users generator
 gem 'devise'
 
+gem 'pg'
+
 group :development do
 	gem 'rails_12factor'
 	gem 'puma'

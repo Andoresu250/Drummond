@@ -1,26 +1,30 @@
-<p id="notice"><%= notice %></p>
+<h1>Lista de trabajadores</h1>
 
-<h1>Listing Workers</h1>
-
-<table>
+<table class="table">
   <thead>
     <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Cc</th>
-      <th colspan="3"></th>
+      <th>Codigo</th>
+      <th>Cedula</th>
+      <th>Nombres</th>
+      <th>Apellidos</th>      
+      <th> Acciones </th>
     </tr>
   </thead>
 
   <tbody>
     <% @workers.each do |worker| %>
       <tr>
+        <td><%= worker.code %></td>
+        <td><%= worker.cc %></td>
         <td><%= worker.first_name %></td>
         <td><%= worker.last_name %></td>
-        <td><%= worker.cc %></td>
-        <td><%= link_to 'Show', worker %></td>
-        <td><%= link_to 'Edit', edit_worker_path(worker) %></td>
-        <td><%= link_to 'Destroy', worker, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        
+        <td><div class="row">
+          <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, worker, :class => "btn btn-info" %>
+          <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_worker_path(worker), :class => "btn btn-warning" %>
+          <%= link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe , worker, method: :delete, data: { confirm: 'Are you sure?' } , :class => "btn btn-danger"%>  
+        </div></td>
+        
       </tr>
     <% end %>
   </tbody>
@@ -28,4 +32,4 @@
 
 <br>
 
-<%= link_to 'New Worker', new_worker_path %>
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Trabajador'.html_safe, new_worker_path, :class => "btn btn-primary" %>
