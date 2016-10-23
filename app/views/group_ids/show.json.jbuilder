@@ -1,0 +1,1 @@
+json.partial! "group_ids/group_id", group_id: @group_id

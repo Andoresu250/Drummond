@@ -6,7 +6,12 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-
+	#GroupId
+	
+	GroupId.create(name: 'Grupo 1')
+	GroupId.create(name: 'Grupo 2')
+	GroupId.create(name: 'Grupo 3')
+#=begin
 	#subestaciones
 
 	Equipment.create(reference: '25SUB8-16')
@@ -218,3 +223,4 @@
 	user.permission_level = 3
 	user.worker = worker
 	user.save!
+#=end

@@ -14,7 +14,7 @@
               <li><%= message %></li>
             <% end %>
           <% end %>
-          <%if @worker.errors.any? %>
+          <%if @user.errors.any? %>
             <% @user.errors.full_messages.each do |message| %>
               <li><%= message %></li>
             <% end %>
@@ -22,17 +22,23 @@
           </ul>
         </div>
       <% end %>
+      
       <div class="form-group">
+        <%= label_tag "worker_id", "Seleccionar un trabajador previo:"  %><br />
+        <%= select "worker", "id" , @workers.collect {|w| [ w.cc.to_s + " " + w.first_name + " " + w.last_name, w.id ] }, {include_blank: 'Crear nuevo trabajador'}, class: "form-control" %>
+      </div>
+      
+      <div class="form-group" id="div_cc">
         <%= label_tag "worker[cc]", "Cedula"  %><br />
         <%= text_field_tag "worker[cc]" , nil , placeholder:"Cedula" ,class: "form-control" %>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="div_first_name">
         <%= label_tag "worker[first_name]", "Nombres"  %><br />
         <%= text_field_tag "worker[first_name]" , nil , placeholder:"Nombres" ,class: "form-control" %>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="div_last_name">
         <%= label_tag "worker[last_name]", "Apellidos"  %><br />
         <%= text_field_tag "worker[last_name]" , nil , placeholder:"Apellidos" ,class: "form-control" %>
       </div>      
@@ -62,4 +68,30 @@
   </div>
 </div>
 
+
+<script>
+  $( "#worker_id" ).change(function() {
+    if($( "#worker_id" ).val() === ""){
+      //Mostar fields
+      $("#worker_cc").prop('disabled', false);
+      $("#worker_first_name").prop('disabled', false);
+      $("#worker_last_name").prop('disabled', false);
+      
+      $("#div_cc").show();
+      $("#div_first_name").show();
+      $("#div_last_name").show();
+      
+      
+    }else{
+      $("#worker_cc").prop('disabled', true);
+      $("#worker_first_name").prop('disabled', true);
+      $("#worker_last_name").prop('disabled', true);
+      
+      $("#div_cc").hide();
+      $("#div_first_name").hide();
+      $("#div_last_name").hide();
+
+    }
+  });
+</script>
 

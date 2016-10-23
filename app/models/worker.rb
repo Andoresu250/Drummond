@@ -6,5 +6,8 @@ class Worker < ActiveRecord::Base
 	validates :cc, presence: {message: "Por favor ingrese su cedula"}
 	validates :cc, numericality: {message: "Su cedula solo debe contener numeros"}  
 	validates :cc, uniqueness: {message: "Esta cedula ya esta resgistrada"}
+	
+	
+	has_one :user
 
 end
