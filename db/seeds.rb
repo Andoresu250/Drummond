@@ -1,16 +1,28 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+
+worker = Worker.new
+worker.first_name = "admin"
+worker.last_name = "admin"
+worker.cc = "0"
+worker.code = "0"
+worker.save!
+
+user = User.new
+user.email = "admin@admin.com"
+user.password = "123456"
+user.password_confirmation = '123456'
+user.permission_level = 3
+user.worker = worker
+user.save!
 
 	#GroupId
-	
+
 	GroupId.create(name: 'Grupo 1')
 	GroupId.create(name: 'Grupo 2')
 	GroupId.create(name: 'Grupo 3')
+
+	g1 = Group.new(group_id_id: 1)
+	g2 = Group.new(group_id_id: 2)
+	g3 = Group.new(group_id_id: 3)
 #=begin
 	#subestaciones
 
@@ -146,81 +158,182 @@
 	Vehicle.create(reference: '7368')
 	Vehicle.create(reference: '1890')
 
-	#Workers Group 1	
+	#Workers Group 1
 
-	Worker.create(first_name:'ALCIDES', last_name:'CARRILLO', cc:77181454, code:'CAR454')
-	Worker.create(first_name:'RAUL', last_name:'PIZARRO', cc:19586136, code:'PI6136')
-	Worker.create(first_name:'ARISTIDES', last_name:'SERNA', cc:12684292, code:'SE4292')
-	Worker.create(first_name:'CARLOS', last_name:'CUELLO', cc:15174954, code:'CU4954')
-	Worker.create(first_name:'DANIEL', last_name:'CABRERA', cc:3741815, code:'CA1815')
-	Worker.create(first_name:'MOISES', last_name:'ZURITA', cc:8747021, code:'ZU7021')
-	Worker.create(first_name:'LUIS', last_name:'FONSECA', cc:77192697, code:'FO2697')
-	Worker.create(first_name:'HUMBERTO', last_name:'MORENO', cc:77174213, code:'MO4213')
-	Worker.create(first_name:'RAFAEL', last_name:'CASTRO', cc:8719547, code:'CA9547')
-	Worker.create(first_name:'JAIRO', last_name:'CASTAÑEDA', cc:9523998, code:'CA3998')
-	Worker.create(first_name:'JULIO', last_name:'ESCOBAR', cc:73102926, code:'ES2926')
-	Worker.create(first_name:'HERALDO', last_name:'SALAS', cc:73559216, code:'JOL')
-	Worker.create(first_name:'OTTO', last_name:'CALVO', cc:77096422, code:'JOL')
-	Worker.create(first_name:'HERIBERTO', last_name:'GARCIA', cc:77173120, code:'JOL')
-	Worker.create(first_name:'MANUEL', last_name:'JIMENEZ', cc:12643955, code:'JOL')
-	Worker.create(first_name:'ANDRES', last_name:'MORA', cc:1067723413, code:'JOL')
-	Worker.create(first_name:'JEAN', last_name:'MARRUGO', cc:77167542, code:'JOL')
-	Worker.create(first_name:'JORGE', last_name:'DIAZ MARINEZ', cc:1082935255, code:'JOL')
+	w = Worker.new(first_name:'ALCIDES', last_name:'CARRILLO', cc:77181454, code:'CAR454')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'RAUL', last_name:'PIZARRO', cc:19586136, code:'PI6136')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'ARISTIDES', last_name:'SERNA', cc:12684292, code:'SE4292')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'CARLOS', last_name:'CUELLO', cc:15174954, code:'CU4954')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'DANIEL', last_name:'CABRERA', cc:3741815, code:'CA1815')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'MOISES', last_name:'ZURITA', cc:8747021, code:'ZU7021')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'LUIS', last_name:'FONSECA', cc:77192697, code:'FO2697')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'HUMBERTO', last_name:'MORENO', cc:77174213, code:'MO4213')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'RAFAEL', last_name:'CASTRO', cc:8719547, code:'CA9547')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'JAIRO', last_name:'CASTAÑEDA', cc:9523998, code:'CA3998')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'JULIO', last_name:'ESCOBAR', cc:73102926, code:'ES2926')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'HERALDO', last_name:'SALAS', cc:73559216, code:'JOL')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'OTTO', last_name:'CALVO', cc:77096422, code:'JOL')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'HERIBERTO', last_name:'GARCIA', cc:77173120, code:'JOL')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'MANUEL', last_name:'JIMENEZ', cc:12643955, code:'JOL')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'ANDRES', last_name:'MORA', cc:1067723413, code:'JOL')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'JEAN', last_name:'MARRUGO', cc:77167542, code:'JOL')
+	w.save!
+	g1.workers.push(w)
+	w = Worker.new(first_name:'JORGE', last_name:'DIAZ MARINEZ', cc:1082935255, code:'JOL')
+	w.save!
+	g1.workers.push(w)
 
+	g1.save!
 	#Workers Group 2
 
 
-	Worker.create(first_name:'MAIRO', last_name:'AMARIS', cc:9264750, code:'AM4750')
-	Worker.create(first_name:'ELMER', last_name:'ARREGOCES', cc:17955480, code:'AR5480')
-	Worker.create(first_name:'FRANCISCO', last_name:'GARCIA', cc:87023997, code:'GA2397')
-	Worker.create(first_name:'VICTOR', last_name:'JIMENEZ', cc:15172172, code:'JI2172')
-	Worker.create(first_name:'AMIN', last_name:'MIRANDA', cc:8707663, code:'MI7663')
-	Worker.create(first_name:'RICARDO', last_name:'QUINTERO', cc:77191505, code:'QUI505')
-	Worker.create(first_name:'JAIME', last_name:'SANIN', cc:8724903, code:'SA4903')
-	Worker.create(first_name:'PEDRO', last_name:'SEQUEA', cc:8686649, code:'SE6649')
-	Worker.create(first_name:'GUSTAVO', last_name:'GUZMAN', cc:77151052, code:'GU1052')
-	Worker.create(first_name:'TEOFILO', last_name:'ROBLES', cc:91420329, code:'RO0329')
-	Worker.create(first_name:'SAMUEL', last_name:'PALLARES', cc:77094314, code:'PA4314')
-	Worker.create(first_name:'YESID', last_name:'PEÑALOZA', cc:1065577897, code:'JOL')
-	Worker.create(first_name:'NILSON', last_name:'ROYERO', cc:18901472, code:'JOL')
-	Worker.create(first_name:'LUIS', last_name:'TERAN', cc:1065607978, code:'JOL')
-	Worker.create(first_name:'WILLINTON', last_name:'ROBLES', cc:85441326, code:'JOL')
-	Worker.create(first_name:'JAVIER', last_name:'VILLERO', cc:18957909, code:'JOL')
-	Worker.create(first_name:'JORGE', last_name:'ROBLES', cc:7629847, code:'JOL')
-	Worker.create(first_name:'EDWIN', last_name:'AGUIRRE', cc:77172564, code:'JOL')
+	w = Worker.new(first_name:'MAIRO', last_name:'AMARIS', cc:9264750, code:'AM4750')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'ELMER', last_name:'ARREGOCES', cc:17955480, code:'AR5480')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'FRANCISCO', last_name:'GARCIA', cc:87023997, code:'GA2397')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'VICTOR', last_name:'JIMENEZ', cc:15172172, code:'JI2172')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'AMIN', last_name:'MIRANDA', cc:8707663, code:'MI7663')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'RICARDO', last_name:'QUINTERO', cc:77191505, code:'QUI505')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'JAIME', last_name:'SANIN', cc:8724903, code:'SA4903')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'PEDRO', last_name:'SEQUEA', cc:8686649, code:'SE6649')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'GUSTAVO', last_name:'GUZMAN', cc:77151052, code:'GU1052')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'TEOFILO', last_name:'ROBLES', cc:91420329, code:'RO0329')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'SAMUEL', last_name:'PALLARES', cc:77094314, code:'PA4314')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'YESID', last_name:'PEÑALOZA', cc:1065577897, code:'JOL')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'NILSON', last_name:'ROYERO', cc:18901472, code:'JOL')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'LUIS', last_name:'TERAN', cc:1065607978, code:'JOL')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'WILLINTON', last_name:'ROBLES', cc:85441326, code:'JOL')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'JAVIER', last_name:'VILLERO', cc:18957909, code:'JOL')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'JORGE', last_name:'ROBLES', cc:7629847, code:'JOL')
+	w.save!
+	g2.workers.push(w)
+	w = Worker.new(first_name:'EDWIN', last_name:'AGUIRRE', cc:77172564, code:'JOL')
+	w.save!
+	g2.workers.push(w)
+
+	g2.save!
 
 	#Workers Group 3
 
-	Worker.create(first_name:'JONETH', last_name:'BAÑOS', cc:72194987, code:'BA4987')
-	Worker.create(first_name:'ALFREDO', last_name:'CARO', cc:19709004, code:'CA9004')
-	Worker.create(first_name:'JHON', last_name:'CERPA', cc:72130399, code:'CE0399')
-	Worker.create(first_name:'GUILLERMO', last_name:'DIAS', cc:77185208, code:'DIA208')
-	Worker.create(first_name:'JOSE', last_name:'MARTINEZ', cc:77177076, code:'MA7076')
-	Worker.create(first_name:'HARVEY', last_name:'MILLAN', cc:8723837, code:'MI3837')
-	Worker.create(first_name:'ROBERTO', last_name:'CABALLERO', cc:72338824, code:'CA8824')
-	Worker.create(first_name:'ANTONIO', last_name:'VILLA', cc:73152686, code:'VI2686')
-	Worker.create(first_name:'JHON', last_name:'TRILLOS', cc:15174088, code:'TR4088')
-	Worker.create(first_name:'JAIRO', last_name:'QUINTERO', cc:77028902, code:'QU8902')
-	Worker.create(first_name:'JUAN', last_name:'CHICA', cc:1067712564, code:'JOL')
-	Worker.create(first_name:'LUIS', last_name:'ZAMBRANO', cc:77177691, code:'JOL')
-	Worker.create(first_name:'ELMER', last_name:'OCHOA', cc:77168141, code:'JOL')
-	Worker.create(first_name:'CESAR', last_name:'ACUÑA', cc:77163187, code:'JOL')
-	Worker.create(first_name:'JULIO', last_name:'TELLEZ', cc:77184943, code:'JOL')
-	Worker.create(first_name:'CESAR', last_name:'CUETO', cc:7574927, code:'JOL')
-	Worker.create(first_name:'ADALBERTO', last_name:'MAIGUEL', cc:72146582, code:'JOL')
+	w = Worker.new(first_name:'JONETH', last_name:'BAÑOS', cc:72194987, code:'BA4987')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'ALFREDO', last_name:'CARO', cc:19709004, code:'CA9004')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'JHON', last_name:'CERPA', cc:72130399, code:'CE0399')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'GUILLERMO', last_name:'DIAS', cc:77185208, code:'DIA208')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'JOSE', last_name:'MARTINEZ', cc:77177076, code:'MA7076')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'HARVEY', last_name:'MILLAN', cc:8723837, code:'MI3837')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'ROBERTO', last_name:'CABALLERO', cc:72338824, code:'CA8824')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'ANTONIO', last_name:'VILLA', cc:73152686, code:'VI2686')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'JHON', last_name:'TRILLOS', cc:15174088, code:'TR4088')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'JAIRO', last_name:'QUINTERO', cc:77028902, code:'QU8902')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'JUAN', last_name:'CHICA', cc:1067712564, code:'JOL')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'LUIS', last_name:'ZAMBRANO', cc:77177691, code:'JOL')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'ELMER', last_name:'OCHOA', cc:77168141, code:'JOL')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'CESAR', last_name:'ACUÑA', cc:77163187, code:'JOL')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'JULIO', last_name:'TELLEZ', cc:77184943, code:'JOL')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'CESAR', last_name:'CUETO', cc:7574927, code:'JOL')
+	w.save!
+	g3.workers.push(w)
+	w = Worker.new(first_name:'ADALBERTO', last_name:'MAIGUEL', cc:72146582, code:'JOL')
+	w.save!
+	g3.workers.push(w)
 
-	worker = Worker.new
-	worker.first_name = "admin"
-	worker.last_name = "admin"
-	worker.cc = "0"
-	worker.code = "0"
-	worker.save!
-	
-	user = User.new
-	user.email = "admin@admin.com"
-	user.password = "123456"
-	user.password_confirmation = '123456'	
-	user.permission_level = 3
-	user.worker = worker
-	user.save!
+	g3.save!
+
+
+
+
+
 #=end

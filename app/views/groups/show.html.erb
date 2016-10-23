@@ -1,0 +1,30 @@
+<h1>Lista de trabajadores del
+    <%= @group.group_id.name %></h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Cedula</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @group.workers.each do |worker| %>
+        <tr>
+            <td><%= worker.code %></td>
+            <td><%= worker.cc %></td>
+            <td><%= worker.first_name %></td>
+            <td><%= worker.last_name %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Edit', edit_group_path(@group) %>
+|
+<%= link_to 'Back', groups_path %>

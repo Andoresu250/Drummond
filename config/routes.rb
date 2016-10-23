@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :groups
   resources :group_ids
   resources :workers
   resources :equipment

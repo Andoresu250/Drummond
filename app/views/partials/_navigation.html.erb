@@ -1,42 +1,58 @@
 <% if user_signed_in? %>
-  <nav class="navbar navbar-default">
+<nav class="navbar navbar-default">
     <div class="container">
 
-      <!-- MOBILE-->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed " data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <i class="fa fa-bars"></i>
-        </button>  
-        <%= link_to root_path do %>
-           <%= image_tag "brand-ico.ico", class: "navbar-brand" %>
-        <% end %>    
-        <%= link_to("Drummond", root_path, class: "navbar-brand")%>
+        <!-- MOBILE-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed " data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars"></i>
+            </button>
+            <%= link_to root_path do %>
+            <%= image_tag "brand-ico.ico", class: "navbar-brand" %>
+            <% end %>
+            <%= link_to("Drummond", root_path, class: "navbar-brand")%>
 
-      </div>    
+        </div>
 
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-        <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right">
 
-          <% if  current_user.is_admin?%>                         
-            <li> <%= link_to "Usuarios", users_admin_index_path %> </li>
-            <li> <%= link_to "Trabajadores", workers_path %> </li>
-          <% end %>
+                <% if  current_user.is_admin?%>
+                <li>
+                    <%= link_to "Usuarios", users_admin_index_path %>
+                </li>
+                <li>
+                    <%= link_to "Trabajadores", workers_path %>
+                </li>
+                <li>
+                    <%= link_to "Grupos", groups_path %>
+                </li>
+                <% end %>
 
-            <li> <%= link_to "Vehiculos", vehicles_path %> </li>
-            <li> <%= link_to "Equipos", equipment_index_path %> </li>            
-            
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Bienvenido  <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li> <%= link_to "Cambiar contraseña", edit_user_path %> </li>              
-              <li><%= link_to "Cerrar sesion", destroy_user_session_path, method: :delete %></li>  
+                <li>
+                    <%= link_to "Vehiculos", vehicles_path %>
+                </li>
+                <li>
+                    <%= link_to "Equipos", equipment_index_path %>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Bienvenido
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <%= link_to "Cambiar contraseña", edit_user_path %>
+                        </li>
+                        <li><%= link_to "Cerrar sesion", destroy_user_session_path, method: :delete %></li>
+                    </ul>
+                </li>
+
             </ul>
-          </li>
-            
-        </ul>
-      </div>
+        </div>
     </div>
-  </nav>
-<% end %>  
+</nav>
+<% end %>

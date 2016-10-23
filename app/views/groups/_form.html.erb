@@ -1,0 +1,50 @@
+<%= form_for(@group) do |f| %>
+<% if @group.errors.any? %>
+<div id="error_explanation">
+    <h2><%= pluralize(@group.errors.count, "error") %>
+        prohibited this group from being saved:</h2>
+
+    <ul>
+        <% @group.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="form-group">
+    <%= label_tag "group_id_id", "Seleccione el grupo"  %><br/>
+    <%= select "group", "group_id_id" , @group_ids.collect {|g| [ g.name, g.id ] }, {include_blank: nil}, class: "form-control" %>
+</div>
+
+<div class="form-group">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Agregar</th>
+                <th>Codigo</th>
+                <th>Cedula</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% @workers.each do |worker| %>
+            <tr>
+                <td><%= check_box_tag 'group[workers][]', worker.id %></td>
+                <td><%= worker.code %></td>
+                <td><%= worker.cc %></td>
+                <td><%= worker.first_name %></td>
+                <td><%= worker.last_name %></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+
+</div>
+
+<div class="actions">
+    <%= f.submit %>
+</div>
+<% end %>
