@@ -4,6 +4,8 @@ class Group < ActiveRecord::Base
   has_many :workers, through: :has_workers
   after_create :save_workers
 
+  validates :group_id_id, presence: true
+
   def workers=(value)
     @workers = value
   end

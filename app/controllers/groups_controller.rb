@@ -28,7 +28,7 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     @group.current = true;
-    @group.workers = workers_params[:workers]    
+    @group.workers = workers_params[:workers]
 #=begin
     respond_to do |format|
       if @group.save
@@ -68,6 +68,7 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1
   # DELETE /groups/1.json
+  # TODO: quitar destroy
   def destroy
     @group.destroy
     respond_to do |format|

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161023021432) do
+ActiveRecord::Schema.define(version: 20161023151822) do
 
   create_table "equipment", force: :cascade do |t|
     t.datetime "created_at",             null: false
@@ -43,6 +43,16 @@ ActiveRecord::Schema.define(version: 20161023021432) do
 
   add_index "has_workers", ["group_id"], name: "index_has_workers_on_group_id", using: :btree
   add_index "has_workers", ["worker_id"], name: "index_has_workers_on_worker_id", using: :btree
+
+  create_table "observations", force: :cascade do |t|
+    t.integer  "equipment_id", limit: 4
+    t.time     "down"
+    t.time     "ready"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "observations", ["equipment_id"], name: "index_observations_on_equipment_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
@@ -83,5 +93,6 @@ ActiveRecord::Schema.define(version: 20161023021432) do
   add_foreign_key "groups", "group_ids"
   add_foreign_key "has_workers", "groups"
   add_foreign_key "has_workers", "workers"
+  add_foreign_key "observations", "equipment"
   add_foreign_key "users", "workers"
 end

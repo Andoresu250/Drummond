@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :shots
+  resources :shots
+  resources :tasks
+  resources :observations
   resources :groups
   resources :group_ids
   resources :workers
