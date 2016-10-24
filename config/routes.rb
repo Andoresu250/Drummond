@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :shots
+  resources :reports
   resources :shots
   resources :tasks
   resources :observations
@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :group_ids
   resources :workers
   resources :equipment
-  resources :vehicles  
+  resources :vehicles
   devise_for :users
   resources :dashboard
 
@@ -18,8 +18,8 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   #devise_scope :user do
   #  root to: "devise/sessions#new"
-  #end  
-  
+  #end
+
   resource :user, only: [:edit] do
     collection do
       patch 'update_password'
