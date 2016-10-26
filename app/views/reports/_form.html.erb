@@ -43,32 +43,32 @@
                 <th class="col-md-6">Comentarios/Observaciones</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <div class="row">
-                    <td class="col-md-2">
-                        <%= select "observations", "equipment_id" , @equipments.collect {|e| [ e.reference, e.id ] }, {include_blank: "Selec. Equipo"}, class: "form-control" %>
-                    </td>
-                    <td class="col-md-1">
-                        <%= time_select "observations", "down" %>
-                    </td>
-                    <td class="col-md-1">
-                        <%= time_select "observations", "ready" %>
-                    </td>
-                    <td class="col-md-6">
-                        <%= text_area "observations", "comment", class: "form-control"%>
-                    </td>
-                </div>
-            </tr>
-
-        </tbody>
+        <tbody></tbody>
     </table>
 </div>
 
 <div>
-    <button type="button" onclick="addRow()" class="btn btn-primary">
+    <button type="button" onclick="addRowObservation()" class="btn btn-primary">
         <i class="fa fa-plus"></i>
-        Nuevo fila</button>
+        Nueva observacion</button>
+</div>
+
+<div class="row">
+    <table class="table" id="taskTable">
+        <thead>
+            <tr>
+                <th class="col-md-2">Equipo</th>
+                <th class="col-md-6">Comentarios/Observaciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div>
+    <button type="button" onclick="addRowTask()" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Nueva tarea por realizar</button>
 </div>
 
 <div class="actions">
@@ -79,8 +79,8 @@
 
 <script type="text/javascript">
 
-    function createSelectEquipment() {
-        var se = '<select class="form-control" >';
+    function createSelectEquipment(name) {
+        var se = '<select class="form-control" name="' + name + '[equipments][]" id="' + name + '_equipments_">';
         se += "<option value>Selec. Equipo</option>";
         <%  @equipments.each do |e| %>
         se += "<option value=" + <%= e.id %> + ">";
@@ -91,15 +91,15 @@
         return se;
     }
 
-    function createTextArea() {
-        var ta = '<textarea class="form-control" name="observations[comment]" id="observations_comment"></textarea>';
+    function createTextArea(name) {
+        var ta = '<textarea name="' + name + '[comments][]" id="' + name + '_comments_" class="form-control"></textarea>';
         return ta;
     }
 
-    function createTimePicker() {
+    function createTimePicker(name) {
         var tp = "";
         tp += "<div class=''>"
-        tp += '<select class="" >';
+        tp += '<select id="observations_' + name + '_hour_" name="observations[' + name + '][hour][]">';
         tp += "<option value>--</option>";
         for (var i = 0; i < 24; i++) {
             tp += i < 10
@@ -108,7 +108,7 @@
         }
         tp += "</select>";
         tp += " : ";
-        tp += '<select class="" >';
+        tp += '<select id="observations_' + name + '_minutes_" name="observations[' + name + '][minutes][]">';
         tp += "<option value>--</option>";
         for (var i = 0; i < 60; i++) {
             tp += i < 10
@@ -120,27 +120,48 @@
         return tp;
     }
 
-    function addRow() {
+    function addRowObservation() {
         var row = "<tr>";
         row += '<div class="row">'
         row += '<td class="col-md-2" >';
-        row += createSelectEquipment();
+        row += createSelectEquipment("observations");
         row += "</td>";
 
         row += '<td class="col-md-1" >';
-        row += createTimePicker();
+        row += createTimePicker("down");
         row += "</td>";
 
         row += '<td class="col-md-1" >';
-        row += createTimePicker();
+        row += createTimePicker("ready");
         row += "</td>";
 
         row += '<td class="col-md-6" >';
-        row += createTextArea();
+        row += createTextArea("observations");
         row += "</td>";
 
         row += '</div>'
         row += "</tr>";
         $("#observationsTable > tbody:last-child").append(row)
     }
+
+    function addRowTask() {
+        var row = "<tr>";
+        row += '<div class="row">'
+        row += '<td class="col-md-2" >';
+        row += createSelectEquipment("tasks");
+        row += "</td>";
+
+        row += '<td class="col-md-10" >';
+        row += createTextArea("tasks");
+        row += "</td>";
+
+        row += '</div>'
+        row += "</tr>";
+        $("#taskTable > tbody:last-child").append(row)
+    }
+
+    $(document).ready(function () {
+        addRowObservation();
+        addRowTask()
+    });
 </script>

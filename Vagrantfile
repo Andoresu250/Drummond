@@ -6,15 +6,15 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Use Ubuntu 16.04 Xenial Xerus 64-bit as our operating system
   config.vm.box = "ubuntu/xenial64"
-  #config.ssh.username = 'root'
-  #config.ssh.password = 'vagrant'
+  config.ssh.username = 'ubuntu'
+  config.ssh.password = ''
   #config.ssh.insert_key = 'true'
 
   # Configurate the virtual machine to use 2GB of RAM
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
     #comentar
-    #vb.gui = true
+    vb.gui = true
   end
 
   # Forward the Rails server default port to the host

@@ -1,19 +1,78 @@
-<p id="notice"><%= notice %></p>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <strong>Turno:</strong>
+            <%= @report.shift %>
+        </div>
+        <div class="form-group ">
+            <strong>Fecha:</strong>
+            <%= @report.date %>
+        </div>
+        <div class="form-group">
+            <p>
+                <strong>Grupo:</strong>
+                <%= @report.group.group_id.name %>
+            </p>
+        </div>
 
-<p>
-  <strong>Shift:</strong>
-  <%= @report.shift %>
-</p>
+    </div>
+    <div class="col-md-9"></div>
+</div>
 
-<p>
-  <strong>Date:</strong>
-  <%= @report.date %>
-</p>
+<div class="row">
+    <table class="table" id="observationsTable">
+        <thead>
+            <tr>
+                <th >Equipo</th>
+                <th >Down</th>
+                <th >Ready</th>
+                <th >Comentarios/Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @report.observations.each do |observation| %>
+            <tr>
+                <td >
+                    <%= observation.equipment.reference %>
+                </td>
+                <td >
+                    <%= "#{observation.down.hour < 10 ? ("0"+observation.down.hour.to_s):(observation.down.hour)}:#{observation.down.min < 10 ? ("0"+observation.down.min.to_s):(observation.down.min)}" if !observation.down.nil? %>
+                </td>
+                <td >
+                    <%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %>
+                </td>
+                <td >
+                    <%= observation.comment %>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
 
-<p>
-  <strong>Group:</strong>
-  <%= @report.group %>
-</p>
+<div class="row">
+    <table class="table" id="taskTable">
+        <thead>
+            <tr>
+                <th >Equipo</th>
+                <th >Comentarios/Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @report.tasks.each do |task| %>
+            <tr>
+                <td>
+                    <%= task.equipment.reference %>
+                </td>
+                <td>
+                    <%= task.comment %>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
 
-<%= link_to 'Edit', edit_report_path(@report) %> |
+<%= link_to 'Edit', edit_report_path(@report) %>
+|
 <%= link_to 'Back', reports_path %>

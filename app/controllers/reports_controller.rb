@@ -19,6 +19,7 @@ class ReportsController < ApplicationController
     @current_groups = Group.where(current: true)
     @shifts = ["Diurno", "Nocturno"]
     @equipments = Equipment.all
+    @vehicles = Vehicle.all
   end
 
   # GET /reports/1/edit
@@ -29,8 +30,12 @@ class ReportsController < ApplicationController
   # POST /reports.json
   def create
     @report = Report.new(report_params)
-
-    raise params.yml
+    puts "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+    puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    puts "----------------------------------------"
+    @report.observations = observations_params_to_object
+    @report.tasks = taks_params_to_object
+    #raise params.yml
     respond_to do |format|
       if @report.save
         format.html { redirect_to @report, notice: 'Report was successfully created.' }
@@ -59,6 +64,7 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.json
   def destroy
+    #@report.destroy_observations
     @report.destroy
     respond_to do |format|
       format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
@@ -75,5 +81,30 @@ class ReportsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def report_params
       params.require(:report).permit(:shift, :date, :group_id)
+    end
+
+    def observations_params
+      params.require(:observations).permit(:down => [:hour => [], :minutes => []], :ready => [:hour => [], :minutes => []],:comments => [], :equipments => [])
+    end
+
+    def taks_params
+      params.require(:tasks).permit(:comments => [], :equipments => [])
+    end
+
+    def observations_params_to_object
+      observations = Array.new(observations_params[:equipments].size) {Hash.new}
+      #observations_params[:down][:hour].each_with_index { |h, index| observations.push({:}) }
+      observations_params[:equipments].each_with_index { |e, index| observations[index].merge!({:equipment_id => e}) }
+      observations_params[:comments].each_with_index { |c, index| observations[index].merge!({:comment => c}) }
+      observations_params[:down][:hour].each_with_index { |d, index| observations[index].merge!({:down => (d.empty? || observations_params[:down][:minutes][index].empty?) ? (nil) : (d + ":" + observations_params[:down][:minutes][index]) }) }
+      observations_params[:ready][:hour].each_with_index { |r, index| observations[index].merge!({:ready => (r.empty? || observations_params[:ready][:minutes][index].empty?) ? (nil) : (r + ":" + observations_params[:ready][:minutes][index]) }) }
+      observations
+    end
+
+    def taks_params_to_object
+      tasks = Array.new (taks_params[:equipments].size) {Hash.new}
+      taks_params[:equipments].each_with_index { |e, index| tasks[index].merge!({:equipment_id => e}) }
+      taks_params[:comments].each_with_index { |c, index| tasks[index].merge!({:comment => c}) }
+      tasks
     end
 end
