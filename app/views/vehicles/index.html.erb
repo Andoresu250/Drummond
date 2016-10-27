@@ -1,27 +1,31 @@
 <h1>Lista de Vehiculos</h1>
 
 <table class="table">
-  <thead>
-    <tr>
-      <th>Referencia</th>      
-      <th> Acciones</th>
-    </tr>
-  </thead>
+    <thead>
+        <tr>
+            <th>Referencia</th>
+            <th>Estado actual</th>
+            <th>Ubicacion actual</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-  <tbody>
-    <% @vehicles.each do |vehicle| %>
-      <tr>
-        <td><%= vehicle.reference %></td>        
-        <td>
-          <div class="row">
-            <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, vehicle_path(vehicle), :class => "btn btn-info" %>
-            <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_vehicle_path(vehicle), :class => "btn btn-warning" %>
-            <%= link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe, vehicle , :class => "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
-          </div>
-        </td>       
-      </tr>
-    <% end %>
-  </tbody>
+    <tbody>
+        <% @vehicles.each do |vehicle| %>
+        <tr>
+            <td><%= vehicle.reference %></td>
+            <td><%= vehicle.current_status %></td>
+            <td><%=  %></td>
+            <td>
+                <div class="row">
+                    <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, vehicle_path(vehicle), :class => "btn btn-info" %>
+                    <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_vehicle_path(vehicle), :class => "btn btn-warning" %>
+                    <%= link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe, vehicle , :class => "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+                </div>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
 </table>
 
 <br>

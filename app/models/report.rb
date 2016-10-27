@@ -6,6 +6,8 @@ class Report < ActiveRecord::Base
   has_many :vehicle_statuses
   after_create :save_observations
   after_create :save_tasks
+  after_create :save_shots
+  after_create :save_vehicle_statuses
 
   def observations=(value)
     @obs = value
@@ -13,6 +15,14 @@ class Report < ActiveRecord::Base
 
   def tasks=(value)
     @tasks = value
+  end
+
+  def shots=(value)
+    @shots = value
+  end
+
+  def vehicle_statuses=(value)
+    @vs = value
   end
 
   def save_observations
@@ -24,6 +34,20 @@ class Report < ActiveRecord::Base
   def save_tasks
     @tasks.each do |task|
       Task.create(task.merge({:report_id => self.id}))
+    end
+  end
+
+  def save_shots
+    @shots.each do |shot|
+      Shot.create(shot.merge({:report_id => self.id}))
+    end
+  end
+
+  def save_vehicle_statuses
+    @vs.each do |v|
+      VehicleStatus.create(v.merge({:report_id => self.id}))
+      vehicle = Vehicle.find_by(id: v[:vehicle_id])
+      vehicle.update(current_status: v[:status])
     end
   end
 

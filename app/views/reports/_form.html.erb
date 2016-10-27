@@ -30,7 +30,55 @@
         </div>
 
     </div>
-    <div class="col-md-9"></div>
+    <div class="col-md-9">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Trabajadores</th>
+                    <th></th>
+                    <th>Supervisores</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DRUM:</td>
+                    <td>8</td>
+                    <td>Senior</td>
+                    <td>Juancho 1</td>
+                </tr>
+                <tr>
+                    <td>JOL:</td>
+                    <td>8</td>
+                    <td>Junior</td>
+                    <td>Juancho 2</td>
+                </tr>
+                <tr>
+                    <td>Ausentes:</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <input type="checkbox" name="" value="">Hay ausente(s)?<br>
+
+    </div>
+</div>
+
+<div class="row" id="workersList">
+
+    <table class="table" id="workersTable">
+        <thead>
+            <tr>
+                <th class="">Cedula</th>
+                <th class="">nombre</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 <div class="row">
@@ -41,38 +89,58 @@
                 <th class="">Down</th>
                 <th class="">Ready</th>
                 <th class="">Comentarios/Observaciones</th>
-                <th class="" ></th>
+                <th class=""></th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
 </div>
 
-<div>
+<div class="row">
     <button type="button" onclick="addRowObservation()" class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Nueva observacion</button>
-</div>
 
+</div>
+<br>
 <div class="row">
     <table class="table" id="taskTable">
         <thead>
             <tr>
                 <th class="col-md-2">Equipo</th>
-                <th class="col-md-9">Comentarios/Observaciones</th>
-                <th class="col-md-1" ></th>
+                <th class="col-md-9">Tareas a realizas/Continuar en el siguiente turno</th>
+                <th class="col-md-1"></th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
 </div>
 
-<div>
+<div class="row">
     <button type="button" onclick="addRowTask()" class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Nueva tarea por realizar</button>
+
+</div>
+<br>
+<div class="row">
+    <table class="table" id="shotsTable">
+        <thead>
+            <tr>
+                <th class="col-md-11">Voladuras</th>
+                <th class="col-md-1"></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
+<div class="row">
+    <button type="button" onclick="addRowShot()" class="btn btn-primary">
+        <i class="fa fa-plus"></i>
+        Nueva Voladura</button>
+</div>
+<br>
 <div class="row">
     <div class="col-md-6">
         <table class="table" id="vehiclesTable">
@@ -85,11 +153,18 @@
             </thead>
             <tbody>
                 <% (0..((@vehicles.size - 1)/2)).each do |index| %>
-                   <tr>
-                        <td> <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %> <%= @vehicles[index].reference %> </td>
-                        <td> <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }), class: "form-control" %> </td>
-                        <td> <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %> </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %>
+                        <%= @vehicles[index].reference %>
+                    </td>
+                    <td>
+                        <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status), class: "form-control" %>
+                    </td>
+                    <td>
+                        <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
+                    </td>
+                </tr>
                 <% end %>
             </tbody>
         </table>
@@ -105,11 +180,18 @@
             </thead>
             <tbody>
                 <% (((@vehicles.size - 1)/2 + 1)..@vehicles.size - 1).each do |index| %>
-                    <tr>
-                        <td> <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %> <%= @vehicles[index].reference %> </td>
-                        <td> <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }), class: "form-control" %> </td>
-                        <td> <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %> </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %>
+                        <%= @vehicles[index].reference %>
+                    </td>
+                    <td>
+                        <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status ), class: "form-control" %>
+                    </td>
+                    <td>
+                        <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
+                    </td>
+                </tr>
                 <% end %>
             </tbody>
         </table>
@@ -124,7 +206,23 @@
 
 <script type="text/javascript">
 
-    function delete_user(row){
+    var groups = [];
+    var group;
+    var worker = {};
+    <% @current_groups.each do |g| %>
+    group = {};
+    group.workers = [];
+    group.name = '<%= g.group_id.name %>';
+    <% g.workers.each do |w| %>
+    worker = {};
+    worker.cc = '<%= w.cc %>';
+    worker.name = '<%= w.first_name + " " + w.last_name %>';
+    group.workers.push(worker);
+    <% end %>
+    groups.push(group);
+    <% end %>
+
+    function delete_user(row) {
         row.closest('tr').remove();
     }
 
@@ -168,8 +266,8 @@
         tp += "</div>"
         return tp;
     }
-    
-    function btnDelete(){
+
+    function btnDelete() {
         var btn = "";
         btn += '<button type="button" onclick ="delete_user($(this))" class="btn btn-danger">'
         btn += '<i class="fa fa-times"></i>'
@@ -195,11 +293,11 @@
         row += '<td class="" >';
         row += createTextArea("observations");
         row += "</td>";
-        
+
         row += '<td class="">';
         row += btnDelete();
         row += '</td>';
-        
+
         row += '</div>'
         row += "</tr>";
         $("#observationsTable > tbody:last-child").append(row)
@@ -215,7 +313,7 @@
         row += '<td class="" >';
         row += createTextArea("tasks");
         row += "</td>";
-        
+
         row += '<td>';
         row += btnDelete();
         row += '</td>'
@@ -225,8 +323,26 @@
         $("#taskTable > tbody:last-child").append(row)
     }
 
+    function addRowShot() {
+        var row = "<tr>";
+        row += '<div class="row">'
+
+        row += '<td class="col-md-11" >';
+        row += createTextArea("shots");
+        row += "</td>";
+
+        row += '<td class="col-md-1">';
+        row += btnDelete();
+        row += '</td>'
+
+        row += '</div>'
+        row += "</tr>";
+        $("#shotsTable > tbody:last-child").append(row)
+    }
+
     $(document).ready(function () {
         addRowObservation();
-        addRowTask()
+        addRowTask();
+        addRowShot();
     });
 </script>

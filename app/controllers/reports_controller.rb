@@ -36,7 +36,9 @@ class ReportsController < ApplicationController
     puts "----------------------------------------"
     @report.observations = observations_params_to_object
     @report.tasks = taks_params_to_object
-    raise params.yml
+    @report.shots = shots_params_to_object
+    @report.vehicle_statuses = vehicle_statuses_params_to_object
+    #raise params.yml
     respond_to do |format|
       if @report.save
         format.html { redirect_to @report, notice: 'Report was successfully created.' }
@@ -89,7 +91,18 @@ class ReportsController < ApplicationController
     end
 
     def taks_params
+      params.merge!({:tasks => {:comments => [], :equipments => []}}) unless params.has_key?(:tasks)
       params.require(:tasks).permit(:comments => [], :equipments => [])
+    end
+
+    def shots_params
+      params.merge!({:shots => {:comments => []}}) unless params.has_key?(:shots)
+      params.require(:shots).permit(:comments => [])
+    end
+
+    def vehicle_statuses_params
+      params.merge!({:vehicles => {:ids => [], :status => [], :location => []}}) unless params.has_key?(:vehicles)
+      params.require(:vehicles).permit(:ids => [], :status => [], :location => [])
     end
 
     def observations_params_to_object
@@ -107,5 +120,19 @@ class ReportsController < ApplicationController
       taks_params[:equipments].each_with_index { |e, index| tasks[index].merge!({:equipment_id => e}) }
       taks_params[:comments].each_with_index { |c, index| tasks[index].merge!({:comment => c}) }
       tasks
+    end
+
+    def shots_params_to_object
+      shots = Array.new (shots_params[:comments].size) {Hash.new}
+      shots_params[:comments].each_with_index { |c, index| shots[index].merge!({:comment => c}) }
+      shots
+    end
+
+    def vehicle_statuses_params_to_object
+      vehicles = Array.new (vehicle_statuses_params[:ids].size) {Hash.new}
+      vehicle_statuses_params[:ids].each_with_index { |id, index| vehicles[index].merge!({:vehicle_id => id}) }
+      vehicle_statuses_params[:status].each_with_index { |status, index| vehicles[index].merge!({:status => status}) }
+      vehicle_statuses_params[:location].each_with_index { |location, index| vehicles[index].merge!({:location => location}) }
+      vehicles
     end
 end

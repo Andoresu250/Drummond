@@ -14,9 +14,42 @@
                 <%= @report.group.group_id.name %>
             </p>
         </div>
+    </div>
+    <div class="col-md-9">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th >Trabajadores</th>
+                    <th></th>
+                    <th>Supervisores</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DRUM:</td>
+                    <td>8
+                    </td>
+                    <td>Senior</td>
+                    <td>Juancho 1</td>
+                </tr>
+                <tr>
+                    <td>JOL:
+                    </td>
+                    <td>8
+                    </td>
+                    <td>Junior</td>
+                    <td>Juancho 2</td>
+                </tr>
+
+            </tbody>
+        </table>
 
     </div>
-    <div class="col-md-9"></div>
+</div>
+
+<div>
+    <!-- mostrar aqui "asistenica" -->
 </div>
 
 <div class="row">
@@ -55,10 +88,11 @@
         <thead>
             <tr>
                 <th >Equipo</th>
-                <th >Comentarios/Observaciones</th>
+                <th >Tareas a realizas/Continuar en el siguiente turno</th>
             </tr>
         </thead>
         <tbody>
+            <% if !@report.tasks.nil? %>
             <% @report.tasks.each do |task| %>
             <tr>
                 <td>
@@ -68,6 +102,7 @@
                     <%= task.comment %>
                 </td>
             </tr>
+            <% end %>
             <% end %>
         </tbody>
     </table>
