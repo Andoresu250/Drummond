@@ -20,6 +20,7 @@ class ReportsController < ApplicationController
     @shifts = ["Diurno", "Nocturno"]
     @equipments = Equipment.all
     @vehicles = Vehicle.all
+    @vehicle_statuses = ["down", "ok", "r"]
   end
 
   # GET /reports/1/edit
@@ -35,7 +36,7 @@ class ReportsController < ApplicationController
     puts "----------------------------------------"
     @report.observations = observations_params_to_object
     @report.tasks = taks_params_to_object
-    #raise params.yml
+    raise params.yml
     respond_to do |format|
       if @report.save
         format.html { redirect_to @report, notice: 'Report was successfully created.' }

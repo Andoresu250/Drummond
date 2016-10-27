@@ -37,10 +37,11 @@
     <table class="table" id="observationsTable">
         <thead>
             <tr>
-                <th class="col-md-2">Equipo</th>
-                <th class="col-md-1">Down</th>
-                <th class="col-md-1">Ready</th>
-                <th class="col-md-6">Comentarios/Observaciones</th>
+                <th class="">Equipo</th>
+                <th class="">Down</th>
+                <th class="">Ready</th>
+                <th class="">Comentarios/Observaciones</th>
+                <th class="" ></th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -58,7 +59,8 @@
         <thead>
             <tr>
                 <th class="col-md-2">Equipo</th>
-                <th class="col-md-6">Comentarios/Observaciones</th>
+                <th class="col-md-9">Comentarios/Observaciones</th>
+                <th class="col-md-1" ></th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -71,6 +73,49 @@
         Nueva tarea por realizar</button>
 </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <table class="table" id="vehiclesTable">
+            <thead>
+                <tr>
+                    <th class="">Vehiculo</th>
+                    <th class="">Estado</th>
+                    <th class="">Ubicacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% (0..((@vehicles.size - 1)/2)).each do |index| %>
+                   <tr>
+                        <td> <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %> <%= @vehicles[index].reference %> </td>
+                        <td> <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }), class: "form-control" %> </td>
+                        <td> <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %> </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table" id="vehiclesTable">
+            <thead>
+                <tr>
+                    <th class="">Vehiculo</th>
+                    <th class="">Estado</th>
+                    <th class="">Ubicacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% (((@vehicles.size - 1)/2 + 1)..@vehicles.size - 1).each do |index| %>
+                    <tr>
+                        <td> <%= hidden_field_tag 'vehicles[ids][]', @vehicles[index].id %> <%= @vehicles[index].reference %> </td>
+                        <td> <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }), class: "form-control" %> </td>
+                        <td> <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %> </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <div class="actions">
     <%= f.submit %>
 </div>
@@ -78,6 +123,10 @@
 <% end %>
 
 <script type="text/javascript">
+
+    function delete_user(row){
+        row.closest('tr').remove();
+    }
 
     function createSelectEquipment(name) {
         var se = '<select class="form-control" name="' + name + '[equipments][]" id="' + name + '_equipments_">';
@@ -119,26 +168,38 @@
         tp += "</div>"
         return tp;
     }
+    
+    function btnDelete(){
+        var btn = "";
+        btn += '<button type="button" onclick ="delete_user($(this))" class="btn btn-danger">'
+        btn += '<i class="fa fa-times"></i>'
+        btn += "</button>"
+        return btn;
+    }
 
     function addRowObservation() {
         var row = "<tr>";
         row += '<div class="row">'
-        row += '<td class="col-md-2" >';
+        row += '<td class="" >';
         row += createSelectEquipment("observations");
         row += "</td>";
 
-        row += '<td class="col-md-1" >';
+        row += '<td class="" >';
         row += createTimePicker("down");
         row += "</td>";
 
-        row += '<td class="col-md-1" >';
+        row += '<td class="" >';
         row += createTimePicker("ready");
         row += "</td>";
 
-        row += '<td class="col-md-6" >';
+        row += '<td class="" >';
         row += createTextArea("observations");
         row += "</td>";
-
+        
+        row += '<td class="">';
+        row += btnDelete();
+        row += '</td>';
+        
         row += '</div>'
         row += "</tr>";
         $("#observationsTable > tbody:last-child").append(row)
@@ -147,13 +208,17 @@
     function addRowTask() {
         var row = "<tr>";
         row += '<div class="row">'
-        row += '<td class="col-md-2" >';
+        row += '<td class="" >';
         row += createSelectEquipment("tasks");
         row += "</td>";
 
-        row += '<td class="col-md-10" >';
+        row += '<td class="" >';
         row += createTextArea("tasks");
         row += "</td>";
+        
+        row += '<td>';
+        row += btnDelete();
+        row += '</td>'
 
         row += '</div>'
         row += "</tr>";
