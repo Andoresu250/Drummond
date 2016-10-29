@@ -1,7 +1,33 @@
 <p>
-  <strong>Reference:</strong>
-  <%= @vehicle.reference %>
+    <strong>Vehiculo #:</strong>
+    <%= @vehicle.reference %>
 </p>
 
-<%= link_to 'Editar', edit_vehicle_path(@vehicle) %> |
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Historico</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Ubicacion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @vehicles_statuses.each do |vs| %>
+            <tr>
+                <td><%= vs.report.date %></td>
+                <td class="<%= vs.status %>">
+                    <center><%= vs.status %></center>
+                </td>
+                <td><%= vs.location %></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+<%= link_to 'Editar', edit_vehicle_path(@vehicle) %>
+|
 <%= link_to 'Volver', vehicles_path %>

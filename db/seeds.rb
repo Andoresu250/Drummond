@@ -24,6 +24,9 @@ user.save!
 	g2 = Group.new(group_id_id: 2)
 	g3 = Group.new(group_id_id: 3)
 #=begin
+
+	Equipment.create(reference: 'Tool Room')
+
 	#subestaciones
 
 	Equipment.create(reference: '25SUB8-16')

@@ -1,6 +1,6 @@
 class GroupIdsController < ApplicationController
   before_action :set_group_id, only: [:show, :edit, :update, :destroy]
-
+  before_action :authenticate_user!
   # GET /group_ids
   # GET /group_ids.json
   def index

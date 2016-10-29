@@ -11,4 +11,5 @@ class Worker < ActiveRecord::Base
 	belongs_to :user
 	has_many :has_workers
   has_many :groups, through: :has_workers
+	has_many :reports, class_name: 'Report', foreign_key: 'created_by_id'
 end

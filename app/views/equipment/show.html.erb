@@ -1,7 +1,33 @@
 <p>
-  <strong>Reference:</strong>
-  <%= @equipment.reference %>
+    <strong>Equipo :</strong>
+    <%= @equipment.reference %>
 </p>
 
-<%= link_to 'Editar', edit_equipment_path(@equipment) %> |
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Historico</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-2">Fecha</th>
+                <th class="col-md-2">Down</th>
+                <th class="col-md-2">Ready</th>
+                <th class="col-md-6">Comentarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @equipment_observations.each do |eb| %>
+            <tr>
+                <td><%= eb.report.date %></td>
+                <td><%= "#{eb.down.hour < 10 ? ("0"+eb.down.hour.to_s):(eb.down.hour)}:#{eb.down.min < 10 ? ("0"+eb.down.min.to_s):(eb.down.min)}" if !eb.down.nil? %></td>
+                <td><%= "#{eb.ready.hour < 10 ? ("0"+eb.ready.hour.to_s):(eb.ready.hour)}:#{eb.ready.min < 10 ? ("0"+eb.ready.min.to_s):(eb.ready.min)}" if !eb.ready.nil? %></td>
+                <td><%= eb.comment %></td>
+            </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+<%= link_to 'Editar', edit_equipment_path(@equipment) %>
+|
 <%= link_to 'Volver', equipment_index_path %>

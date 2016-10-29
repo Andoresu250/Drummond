@@ -1,18 +1,34 @@
 <div class="row">
+    <div class="col-md-3"><%= image_tag("drummond.png", :alt => "", :height => "75") %></div>
+    <div class="col-md-9">
+        <h1>Reporte de cambio de turno</h1>
+    </div>
+</div>
+<br></br>
+<% unless @report.created_by.nil?%>
+<div class="row">
+    <strong>Reporte creado por:
+    </strong>
+    <%= @report.created_by.first_name + " " + @report.created_by.last_name + " con cedula: " + @report.created_by.cc.to_s %>
+</div>
+<% end %>
+<div class="row">
     <div class="col-md-3">
+        <br>
         <div class="form-group">
-            <strong>Turno:</strong>
+            <strong>Turno:
+            </strong>
             <%= @report.shift %>
         </div>
         <div class="form-group ">
-            <strong>Fecha:</strong>
+            <strong>Fecha:
+            </strong>
             <%= @report.date %>
         </div>
         <div class="form-group">
             <p>
-                <strong>Grupo:</strong>
-                <%= @report.group.group_id.name %>
-            </p>
+                <strong>Grupo:
+                </strong><%= @report.group.group_id.name %></p>
         </div>
     </div>
     <div class="col-md-9">
@@ -20,7 +36,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th >Trabajadores</th>
+                    <th>Trabajadores</th>
                     <th></th>
                     <th>Supervisores</th>
                 </tr>
@@ -28,18 +44,31 @@
             <tbody>
                 <tr>
                     <td>DRUM:</td>
-                    <td>8
-                    </td>
+                    <td><%= @report.group.workers.where.not(code: "JOL").count %></td>
                     <td>Senior</td>
-                    <td>Juancho 1</td>
+                    <td><%= @report.senior.first_name + " " + @report.senior.last_name unless @report.senior.nil? %></td>
                 </tr>
                 <tr>
-                    <td>JOL:
-                    </td>
-                    <td>8
-                    </td>
+                    <td>JOL:</td>
+                    <td><%= @report.group.workers.where(code: "JOL").count %></td>
                     <td>Junior</td>
-                    <td>Juancho 2</td>
+                    <td><%= @report.junior.first_name + " " + @report.junior.last_name unless @report.senior.nil? %></td>
+                </tr>
+                <tr>
+                    <td>Ausentes:</td>
+                    <td><%= @report.absences.count %></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Total:</strong>
+                    </td>
+                    <td>
+                        <strong><%= @report.group.workers.count - @report.absences.count %></strong>
+                    </td>
+                    <td></td>
+                    <td></td>
                 </tr>
 
             </tbody>
@@ -50,64 +79,205 @@
 
 <div>
     <!-- mostrar aqui "asistenica" -->
+    <% unless @report.absences.empty? %>
+    <div class="panel panel-default">
+        <div class="panel-heading">Ausencias</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-md-4">Nombre</th>
+                    <th class="col-md-8">Causa</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @report.absences.each do |abs| %>
+                <tr>
+                    <th class="col-md-4"><%= abs.worker.first_name + " " + abs.worker.last_name %></th>
+                    <th class="col-md-8"><%= abs.comment %></th>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <% end %>
 </div>
+
+<% unless @report.observations.empty? %>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <center>
+                <b>Trabajos realizados</b>
+            </center>
+        </div>
+        <table class="table" id="observationsTable">
+            <thead>
+                <tr>
+                    <th class="col-md-2">Equipo</th>
+                    <th class="col-md-1">Down</th>
+                    <th class="col-md-1">Ready</th>
+                    <th class="col-md-8">Comentarios/Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @report.observations.each do |observation| %>
+                <tr>
+                    <td class="col-md-2">
+                        <%= observation.equipment.reference %>
+                    </td>
+                    <td class="col-md-1">
+                        <%= "#{observation.down.hour < 10 ? ("0"+observation.down.hour.to_s):(observation.down.hour)}:#{observation.down.min < 10 ? ("0"+observation.down.min.to_s):(observation.down.min)}" if !observation.down.nil? %>
+                    </td>
+                    <td class="col-md-1">
+                        <%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %>
+                    </td>
+                    <td class="col-md-8">
+                        <%= observation.comment %>
+                    </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+<% else %>
+<div class="row">
+    <strong>
+        <center>
+            No hay registros en el informe</center>
+    </strong>
+</div>
+<br>
+<% end %>
+
+<% unless @report.tasks.empty? %>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <center>
+                <b>Tareas a realizar</b>
+            </center>
+        </div>
+        <table class="table" id="taskTable">
+            <thead>
+                <tr>
+                    <th class="col-md-2">Equipo</th>
+                    <th class="col-md-8">Tareas a realizas/Continuar en el siguiente turno</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if !@report.tasks.nil? %>
+                <% @report.tasks.each do |task| %>
+                <tr>
+                    <td class="col-md-2">
+                        <%= task.equipment.reference %>
+                    </td>
+                    <td class="col-md-8">
+                        <%= task.comment %>
+                    </td>
+                </tr>
+                <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+<% else %>
+<div class="row">
+    <strong>
+        <center>
+            No hay tareas por realizar en el informe</center>
+    </strong>
+</div>
+<br>
+<% end %>
+
+<% unless @report.shots.empty? %>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">Voladuras</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @report.shots.each do |shot| %>
+                <tr>
+                    <td><%= shot.comment %></td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+<% else %>
+<div class="row">
+    <strong>
+        <center>
+            No hay voladuras</center>
+    </strong>
+</div>
+<br>
+<% end %>
 
 <div class="row">
-    <table class="table" id="observationsTable">
-        <thead>
-            <tr>
-                <th >Equipo</th>
-                <th >Down</th>
-                <th >Ready</th>
-                <th >Comentarios/Observaciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% @report.observations.each do |observation| %>
-            <tr>
-                <td >
-                    <%= observation.equipment.reference %>
-                </td>
-                <td >
-                    <%= "#{observation.down.hour < 10 ? ("0"+observation.down.hour.to_s):(observation.down.hour)}:#{observation.down.min < 10 ? ("0"+observation.down.min.to_s):(observation.down.min)}" if !observation.down.nil? %>
-                </td>
-                <td >
-                    <%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %>
-                </td>
-                <td >
-                    <%= observation.comment %>
-                </td>
-            </tr>
-            <% end %>
-        </tbody>
-    </table>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <center>
+                <b>Estado y ubicacion flota de vehiculos</b>
+            </center>
+        </div>
+        <div class="col-md-6">
+            <table class="table" id="vehiclesTable">
+                <thead>
+                    <tr>
+                        <th class="">Vehiculo</th>
+                        <th class="">Estado</th>
+                        <th class="">Ubicacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% (0..((@report.vehicle_statuses.size - 1)/2)).each do |index| %>
+                    <tr>
+                        <td><%= @report.vehicle_statuses[index].vehicle.reference %></td>
+                        <td class='<%= @report.vehicle_statuses[index].status %>'>
+                            <center><%= @report.vehicle_statuses[index].status %></center>
+                        </td>
+                        <td><%= @report.vehicle_statuses[index].location %></td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="table" id="vehiclesTable">
+                <thead>
+                    <tr>
+                        <th class="">Vehiculo</th>
+                        <th class="">Estado</th>
+                        <th class="">Ubicacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% (((@report.vehicle_statuses.size - 1)/2 + 1)..@report.vehicle_statuses.size - 1).each do |index| %>
+                    <tr>
+                        <td><%= @report.vehicle_statuses[index].vehicle.reference %></td>
+                        <td class='<%= @report.vehicle_statuses[index].status %>'>
+                            <center><%= @report.vehicle_statuses[index].status %></center>
+                        </td>
+                        <td><%= @report.vehicle_statuses[index].location %></td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <table class="table" id="taskTable">
-        <thead>
-            <tr>
-                <th >Equipo</th>
-                <th >Tareas a realizas/Continuar en el siguiente turno</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if !@report.tasks.nil? %>
-            <% @report.tasks.each do |task| %>
-            <tr>
-                <td>
-                    <%= task.equipment.reference %>
-                </td>
-                <td>
-                    <%= task.comment %>
-                </td>
-            </tr>
-            <% end %>
-            <% end %>
-        </tbody>
-    </table>
-</div>
-
-<%= link_to 'Edit', edit_report_path(@report) %>
+<%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_report_path(@report), :class => "btn btn-warning" %>
 |
-<%= link_to 'Back', reports_path %>
+<%= link_to '<i class="fa fa-arrow-left"></i> Volver'.html_safe, reports_path, :class => "btn btn-primary" %>
+
+<br></br>

@@ -10,6 +10,7 @@ class VehiclesController < ApplicationController
   # GET /vehicles/1
   # GET /vehicles/1.json
   def show
+    @vehicles_statuses = @vehicle.vehicle_statuses.order(created_at: :desc)
   end
 
   # GET /vehicles/new

@@ -1,6 +1,16 @@
-<h1>Editing Report</h1>
+<div class="row">
+    <div class="col-md-3"><%= image_tag("drummond.png", :alt => "", :height => "75") %></div>
+    <div class="col-md-9">
+        <h1>Editar reporte de cambio de turno</h1>
+    </div>
+</div>
 
-<%= render 'form' %>
+<br></br>
 
-<%= link_to 'Show', @report %> |
-<%= link_to 'Back', reports_path %>
+<%= render 'form' , locals: {button_text: "Guardar Cambios"}%>
+
+<br></br>
+
+<%= link_to '<i class="fa fa-arrow-left"></i> Volver'.html_safe, reports_path, :class => "btn btn-primary" %>
+
+<br></br>

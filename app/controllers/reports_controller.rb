@@ -1,9 +1,11 @@
 class ReportsController < ApplicationController
   before_action :set_report, only: [:show, :edit, :update, :destroy]
-
+  before_action :load_references, only: [:new, :edit]
+  before_action :authenticate_user!
   # GET /reports
   # GET /reports.json
   def index
+    @my_reports = Report.where(created_by: current_user.worker.id)
     @reports = Report.all
   end
 
@@ -15,12 +17,7 @@ class ReportsController < ApplicationController
   # GET /reports/new
   def new
     @report = Report.new
-    @report.group_id = current_user.worker.groups.find_by(current: true).id  unless current_user.worker.groups.where(current: true).empty?
-    @current_groups = Group.where(current: true)
-    @shifts = ["Diurno", "Nocturno"]
-    @equipments = Equipment.all
-    @vehicles = Vehicle.all
-    @vehicle_statuses = ["down", "ok", "r"]
+
   end
 
   # GET /reports/1/edit
@@ -31,13 +28,12 @@ class ReportsController < ApplicationController
   # POST /reports.json
   def create
     @report = Report.new(report_params)
-    puts "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-    puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    puts "----------------------------------------"
+    @report.created_by = current_user.worker
     @report.observations = observations_params_to_object
     @report.tasks = taks_params_to_object
     @report.shots = shots_params_to_object
     @report.vehicle_statuses = vehicle_statuses_params_to_object
+    @report.absences = absences_params_to_object
     #raise params.yml
     respond_to do |format|
       if @report.save
@@ -53,7 +49,12 @@ class ReportsController < ApplicationController
   # PATCH/PUT /reports/1
   # PATCH/PUT /reports/1.json
   def update
+    @report.observations = observations_params_to_object
+    @report.tasks = taks_params_to_object
+    @report.shots = shots_params_to_object
+    @report.vehicle_statuses = vehicle_statuses_params_to_object
     respond_to do |format|
+
       if @report.update(report_params)
         format.html { redirect_to @report, notice: 'Report was successfully updated.' }
         format.json { render :show, status: :ok, location: @report }
@@ -81,12 +82,23 @@ class ReportsController < ApplicationController
       @report = Report.find(params[:id])
     end
 
+    def load_references
+      @report.group_id = current_user.worker.groups.find_by(current: true).id  unless current_user.worker.groups.where(current: true).empty?
+      @current_groups = Group.where(current: true)
+      @shifts = ["Diurno", "Nocturno"]
+      @equipments = Equipment.all
+      @vehicles = Vehicle.all
+      @vehicle_statuses = ["down", "ok", "r"]
+      @sups = User.all.where.not(email: "admin@admin.com")
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def report_params
-      params.require(:report).permit(:shift, :date, :group_id)
+      params.require(:report).permit(:shift, :date, :group_id, :senior_id, :junior_id)
     end
 
     def observations_params
+      params.merge!({:observations => { :down => { :hour => [], :minutes => [] }, :ready => { :hour => [], :minutes => [] }, :comments => [], :equipments => [] }}) unless params.has_key?(:observations)
       params.require(:observations).permit(:down => [:hour => [], :minutes => []], :ready => [:hour => [], :minutes => []],:comments => [], :equipments => [])
     end
 
@@ -105,13 +117,17 @@ class ReportsController < ApplicationController
       params.require(:vehicles).permit(:ids => [], :status => [], :location => [])
     end
 
+    def absences_params
+      params.merge!({:absences => {:ids => [], :comments => []}}) unless params.has_key?(:absences)
+      params.require(:absences).permit(:comments => [], :ids => [])
+    end
+
     def observations_params_to_object
       observations = Array.new(observations_params[:equipments].size) {Hash.new}
-      #observations_params[:down][:hour].each_with_index { |h, index| observations.push({:}) }
       observations_params[:equipments].each_with_index { |e, index| observations[index].merge!({:equipment_id => e}) }
       observations_params[:comments].each_with_index { |c, index| observations[index].merge!({:comment => c}) }
-      observations_params[:down][:hour].each_with_index { |d, index| observations[index].merge!({:down => (d.empty? || observations_params[:down][:minutes][index].empty?) ? (nil) : (d + ":" + observations_params[:down][:minutes][index]) }) }
-      observations_params[:ready][:hour].each_with_index { |r, index| observations[index].merge!({:ready => (r.empty? || observations_params[:ready][:minutes][index].empty?) ? (nil) : (r + ":" + observations_params[:ready][:minutes][index]) }) }
+      observations_params[:down][:hour].each_with_index { |d, index| observations[index].merge!({:down => (d.empty? || observations_params[:down][:minutes][index].empty?) ? (nil) : (d.to_s + ":" + observations_params[:down][:minutes][index].to_s) }) }
+      observations_params[:ready][:hour].each_with_index { |r, index| observations[index].merge!({:ready => (r.empty? || observations_params[:ready][:minutes][index].empty?) ? (nil) : (r.to_s + ":" + observations_params[:ready][:minutes][index].to_s) }) }
       observations
     end
 
@@ -134,5 +150,12 @@ class ReportsController < ApplicationController
       vehicle_statuses_params[:status].each_with_index { |status, index| vehicles[index].merge!({:status => status}) }
       vehicle_statuses_params[:location].each_with_index { |location, index| vehicles[index].merge!({:location => location}) }
       vehicles
+    end
+
+    def absences_params_to_object
+      absences = Array.new (absences_params[:ids].size) {Hash.new}
+      absences_params[:ids].each_with_index { |id, index| absences[index].merge!({:worker_id => id}) }
+      absences_params[:comments].each_with_index { |c, index| absences[index].merge!({:comment => c}) }
+      absences
     end
 end

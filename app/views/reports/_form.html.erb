@@ -35,46 +35,38 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Trabajadores</th>
-                    <th></th>
                     <th>Supervisores</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>DRUM:</td>
-                    <td>8</td>
                     <td>Senior</td>
-                    <td>Juancho 1</td>
+                    <td><%= f.select :senior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.id ] }, {include_blank: "---"}, class: "form-control" %></td>
                 </tr>
                 <tr>
-                    <td>JOL:</td>
-                    <td>8</td>
                     <td>Junior</td>
-                    <td>Juancho 2</td>
+                    <td><%= f.select :junior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.id ] }, {include_blank: "---"}, class: "form-control" %></td>
                 </tr>
-                <tr>
-                    <td>Ausentes:</td>
-                    <td>0</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-
             </tbody>
         </table>
 
-        <input type="checkbox" name="" value="">Hay ausente(s)?<br>
+        <input type="checkbox" id="haveAbsences" onclick="showCB()">Hay ausente(s)?
+        <input type="checkbox" id="ShowWorkers" onclick="showAbsencesList()" hidden="true">
+        <span id="ShowWorkersL" hidden="true">
+            Mostrar lista de trabajadores
+        </span>
 
     </div>
 </div>
 
-<div class="row" id="workersList">
+<div class="row" id="workersList" hidden="true">
 
     <table class="table" id="workersTable">
         <thead>
             <tr>
-                <th class="">Cedula</th>
-                <th class="">nombre</th>
+                <th class="col-md-2">Cedula</th>
+                <th class="col-md-3">nombre</th>
+                <th class="col-md-7">Causa</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -85,14 +77,24 @@
     <table class="table" id="observationsTable">
         <thead>
             <tr>
-                <th class="">Equipo</th>
-                <th class="">Down</th>
-                <th class="">Ready</th>
-                <th class="">Comentarios/Observaciones</th>
-                <th class=""></th>
+                <th class="col-md-2">Equipo</th>
+                <th class="col-md-2">Down</th>
+                <th class="col-md-2">Ready</th>
+                <th class="col-md-5">Comentarios/Observaciones</th>
+                <th class="col-md-1"></th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            <% @report.observations.each do |observation| %>
+            <tr>
+                <td class="col-md-2"><%= observation.equipment.reference %></td>
+                <td class="col-md-2"><%= "#{observation.down.hour < 10 ? ("0"+observation.down.hour.to_s):(observation.down.hour)}:#{observation.down.min < 10 ? ("0"+observation.down.min.to_s):(observation.down.min)}" if !observation.down.nil? %></td>
+                <td class="col-md-2"><%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %></td>
+                <td class="col-md-5"><%= observation.comment %></td>
+                <td class=""></td>
+            </tr>
+            <% end %>
+        </tbody>
     </table>
 </div>
 
@@ -112,7 +114,15 @@
                 <th class="col-md-1"></th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            <% @report.tasks.each do |task| %>
+            <tr>
+                <td class="col-md-2"><%= task.equipment.reference %></td>
+                <td class="col-md-9"><%= task.comment %></td>
+                <td class=""></td>
+            </tr>
+            <% end %>
+        </tbody>
     </table>
 </div>
 
@@ -131,7 +141,14 @@
                 <th class="col-md-1"></th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            <% @report.shots.each do |shot| %>
+            <tr>
+                <td class="col-md-11"><%= shot.comment %></td>
+                <td class=""></td>
+            </tr>
+            <% end %>
+        </tbody>
     </table>
 </div>
 
@@ -162,7 +179,11 @@
                         <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status), class: "form-control" %>
                     </td>
                     <td>
+                        <% if @vehicles[index].vehicle_statuses.last.nil? %>
                         <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
+                    <% else %>
+                        <%= text_area_tag 'vehicles[location][]', @vehicles[index].vehicle_statuses.last.location ,class: 'form-control' %>
+                        <% end %>
                     </td>
                 </tr>
                 <% end %>
@@ -189,7 +210,11 @@
                         <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status ), class: "form-control" %>
                     </td>
                     <td>
+                        <% if @vehicles[index].vehicle_statuses.last.nil? %>
                         <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
+                    <% else %>
+                        <%= text_area_tag 'vehicles[location][]', @vehicles[index].vehicle_statuses.last.location ,class: 'form-control' %>
+                        <% end %>
                     </td>
                 </tr>
                 <% end %>
@@ -199,7 +224,7 @@
 </div>
 
 <div class="actions">
-    <%= f.submit %>
+    <%= f.submit locals[:button_text], class:"btn btn-primary"%>
 </div>
 
 <% end %>
@@ -215,12 +240,15 @@
     group.name = '<%= g.group_id.name %>';
     <% g.workers.each do |w| %>
     worker = {};
+    worker.id = <%= w.id %>
     worker.cc = '<%= w.cc %>';
     worker.name = '<%= w.first_name + " " + w.last_name %>';
     group.workers.push(worker);
     <% end %>
     groups.push(group);
     <% end %>
+
+    console.log(groups);
 
     function delete_user(row) {
         row.closest('tr').remove();
@@ -278,23 +306,23 @@
     function addRowObservation() {
         var row = "<tr>";
         row += '<div class="row">'
-        row += '<td class="" >';
+        row += '<td class="col-md-2" >';
         row += createSelectEquipment("observations");
         row += "</td>";
 
-        row += '<td class="" >';
+        row += '<td class="col-md-2" >';
         row += createTimePicker("down");
         row += "</td>";
 
-        row += '<td class="" >';
+        row += '<td class="col-md-2" >';
         row += createTimePicker("ready");
         row += "</td>";
 
-        row += '<td class="" >';
+        row += '<td class="col-md-5" >';
         row += createTextArea("observations");
         row += "</td>";
 
-        row += '<td class="">';
+        row += '<td class="col-md-1">';
         row += btnDelete();
         row += '</td>';
 
@@ -340,9 +368,92 @@
         $("#shotsTable > tbody:last-child").append(row)
     }
 
+    function getGroupByName(name) {
+        for (var group of groups) {
+            if (group.name === name) {
+                return group;
+            }
+        }
+        return null;
+    }
+
+    function generateWorkersList(name) {
+        $("#workersTable > tbody").html("");
+        var row = "";
+        var group = getGroupByName(name);
+        for (var worker of group.workers) {
+            row = "<tr>";
+            row += "<div class='row'>";
+
+            row += '<td class="col-md-2">';
+            row += '<input type="checkbox" name="absences[ids][]" id="report_absences_" value="' + worker.id + '">'
+            row += worker.cc
+            row += '</td>';
+
+            row += '<td class="col-md-3">';
+            row += worker.name
+            row += '</td>';
+
+            row += '<td class="col-md-7">';
+            //row += createTextArea("absences");
+            row += '</td>';
+
+            row += "</div>";
+            row += "/<tr>";
+
+            $("#workersTable > tbody:last-child").append(row)
+        }
+    }
+
+    function getGroupName() {
+        return $("#report_group_id option:selected").text();
+    }
+
+    function showAbsencesList() {
+        if ($("#ShowWorkers").prop('checked')) {
+            $("#workersList").show();
+        } else {
+            $("#workersList").hide();
+        }
+    }
+
+    function showCB() {
+        if ($("#haveAbsences").prop('checked')) {
+            $("#ShowWorkers").show();
+            $("#ShowWorkersL").show();
+        } else {
+            $("#ShowWorkers").hide();
+            $("#ShowWorkersL").hide();
+            $("#workersList").hide();
+            $("#ShowWorkers").prop("checked", false);
+            $("#report_absences_").prop("checked", false);
+            $('td[name*="report[absences][]"]').prop("checked", false);
+        }
+    }
+
     $(document).ready(function () {
         addRowObservation();
         addRowTask();
         addRowShot();
+        generateWorkersList(getGroupName());
+
+        $('#report_group_id').on('change', function () {
+            generateWorkersList(getGroupName());
+        });
+
+        $("#haveAbsences").change(function () {
+            $("input:checkbox[name='report[absences][]']").prop('checked', false);
+        });
+
+        $("input[type='checkbox']").on("click", function () {
+            var row = $(this).parent().next().next();
+            var isChecked = $(this).is(':checked');
+            if (isChecked) {
+                row.append(createTextArea("absences"));
+            } else {
+                row.html("");
+            }
+        });
+
     });
 </script>

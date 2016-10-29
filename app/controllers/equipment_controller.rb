@@ -10,6 +10,7 @@ class EquipmentController < ApplicationController
   # GET /equipment/1
   # GET /equipment/1.json
   def show
+    @equipment_observations = @equipment.observations.order(created_at: :desc)
   end
 
   # GET /equipment/new

@@ -1,21 +1,22 @@
 <%= form_for(@equipment) do |f| %>
-  <% if @equipment.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@equipment.errors.count, "error") %> prohibited this equipment from being saved:</h2>
+<% if @equipment.errors.any? %>
+<div id="error_explanation">
+    <h2><%= pluralize(@equipment.errors.count, "error") %>
+        prohibited this equipment from being saved:</h2>
 
-      <ul>
-      <% @equipment.errors.full_messages.each do |message| %>
+    <ul>
+        <% @equipment.errors.full_messages.each do |message| %>
         <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-  
-  <div class="form-group">
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<div class="form-group">
     <%= f.label :reference, "Referencia" %><br>
-    <%= f.number_field :reference , placeholder:"Referencia",class:"form-control"%>
-  </div>
-  <div class="actions">
-    <%= f.submit locals[:button_text], class:"btn btn-primary"%>    
-  </div>
+    <%= f.text_field :reference , placeholder:"Referencia",class:"form-control"%>
+</div>
+<div class="actions">
+    <%= f.submit locals[:button_text], class:"btn btn-primary"%>
+</div>
 <% end %>

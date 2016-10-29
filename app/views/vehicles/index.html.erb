@@ -14,8 +14,10 @@
         <% @vehicles.each do |vehicle| %>
         <tr>
             <td><%= vehicle.reference %></td>
-            <td><%= vehicle.current_status %></td>
-            <td><%=  %></td>
+            <td class="<%= vehicle.current_status %>">
+                <center><%= vehicle.current_status %></center>
+            </td>
+            <td><%= vehicle.vehicle_statuses.last.location unless vehicle.vehicle_statuses.empty? %></td>
             <td>
                 <div class="row">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, vehicle_path(vehicle), :class => "btn btn-info" %>

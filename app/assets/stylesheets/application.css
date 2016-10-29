@@ -20,7 +20,7 @@
 .top-content .description a {
 	color: #fff;
 }
-.top-content .description a:hover, 
+.top-content .description a:hover,
 .top-content .description a:focus { border-bottom: 1px dotted #fff; }
 
 .form-box {
@@ -74,4 +74,13 @@
 
 .btn{
 	color: white !important;
+}
+
+.down{
+  color: #a94442;
+  background-color: #f2dede;
+}
+.ok{
+  color: #31708f;
+  background-color: #d9edf7;
 }

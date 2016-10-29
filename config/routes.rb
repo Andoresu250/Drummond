@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   resources :reports
-  resources :shots
-  resources :tasks
-  resources :observations
+  #resources :shots
+  #resources :tasks
+  #resources :observations
   resources :groups
-  resources :group_ids
+  #resources :group_ids
   resources :workers
   resources :equipment
   resources :vehicles

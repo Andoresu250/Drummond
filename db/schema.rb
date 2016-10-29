@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027163808) do
+ActiveRecord::Schema.define(version: 20161029052520) do
+
+  create_table "absences", force: :cascade do |t|
+    t.integer  "report_id",  limit: 4
+    t.integer  "worker_id",  limit: 4
+    t.text     "comment",    limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "absences", ["report_id"], name: "index_absences_on_report_id", using: :btree
+  add_index "absences", ["worker_id"], name: "index_absences_on_worker_id", using: :btree
 
   create_table "equipment", force: :cascade do |t|
     t.datetime "created_at",             null: false
@@ -58,11 +69,14 @@ ActiveRecord::Schema.define(version: 20161027163808) do
   add_index "observations", ["report_id"], name: "index_observations_on_report_id", using: :btree
 
   create_table "reports", force: :cascade do |t|
-    t.string   "shift",      limit: 255
+    t.string   "shift",         limit: 255
     t.date     "date"
-    t.integer  "group_id",   limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "group_id",      limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "senior_id",     limit: 4
+    t.integer  "junior_id",     limit: 4
+    t.integer  "created_by_id", limit: 4
   end
 
   add_index "reports", ["group_id"], name: "index_reports_on_group_id", using: :btree
@@ -136,6 +150,8 @@ ActiveRecord::Schema.define(version: 20161027163808) do
     t.string   "code",       limit: 255
   end
 
+  add_foreign_key "absences", "reports"
+  add_foreign_key "absences", "workers"
   add_foreign_key "groups", "group_ids"
   add_foreign_key "has_workers", "groups"
   add_foreign_key "has_workers", "workers"

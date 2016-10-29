@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  
+  before_action :authenticate_user!
   before_filter :authenticate_user!
 
   def index
@@ -19,24 +19,24 @@ class UsersController < ApplicationController
   def create
       @workers = Worker.all
       @user = User.new(user_params)
-      puts "---------------------------------------------"    
+      puts "---------------------------------------------"
       puts worker_id_params
       puts worker_params
-      
+
 
       if have_worker_id
         @worker = Worker.new(worker_params)
         if @worker.save
           @user.worker = @worker
           if @user.save
-            redirect_to users_admin_index_path, notice: "Usuario creado satisfactoriamente" 
+            redirect_to users_admin_index_path, notice: "Usuario creado satisfactoriamente"
           else
-              Worker.find(@worker.id).destroy   
-              render :new                     
-          end  
-        else        
+              Worker.find(@worker.id).destroy
+              render :new
+          end
+        else
           render :new
-        end      
+        end
       else
         puts "Esta vacio los params"
         puts worker_id_params
@@ -45,13 +45,13 @@ class UsersController < ApplicationController
         @worker = Worker.find(worker_id_params[:id].to_i)
         @user.worker = @worker
         if @user.save
-          redirect_to users_admin_index_path, notice: "Usuario creado satisfactoriamente" 
+          redirect_to users_admin_index_path, notice: "Usuario creado satisfactoriamente"
         else
-            render :new                     
-        end  
+            render :new
+        end
       end
 
-           
+
   end
 
   def edit
@@ -71,7 +71,7 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params_edit_pass    
+  def user_params_edit_pass
     params.require(:user).permit(:password, :password_confirmation)
   end
 
@@ -82,11 +82,11 @@ class UsersController < ApplicationController
   def worker_params
     params.require(:worker).permit(:first_name, :last_name, :cc, :code)
   end
-  
+
   def worker_id_params
     params.require(:worker).permit(:id)
   end
-  
+
   def have_worker_id
      worker_id_params[:id] == ""
   end
