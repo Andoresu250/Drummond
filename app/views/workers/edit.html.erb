@@ -1,6 +1,11 @@
-<h1>Editing Worker</h1>
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
 
-<%= render 'form' %>
+        <h1>Editar Trabajador</h1>
 
-<%= link_to 'Show', @worker %> |
-<%= link_to 'Back', workers_path %>
+        <%= render 'form' , locals: {button_text: "Guardar cambios"}%>
+
+        <%= link_to 'Volver', workers_path %>
+
+    </div>
+</div>

@@ -33,6 +33,9 @@ gem 'devise'
 
 gem 'pg'
 
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+
 group :development do
 	gem 'rails_12factor'
 	gem 'puma'
@@ -61,4 +64,3 @@ group :development do
   #See much better erros
   gem "better_errors"
 end
-

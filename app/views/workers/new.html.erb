@@ -1,5 +1,11 @@
-<h1>New Worker</h1>
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
 
-<%= render 'form' %>
+        <h1>Nuevo Trabajador</h1>
 
-<%= link_to 'Back', workers_path %>
+        <%= render 'form' , locals: {button_text: "Crear Trabajador"}%>
+
+        <%= link_to 'Volver', workers_path %>
+
+    </div>
+</div>

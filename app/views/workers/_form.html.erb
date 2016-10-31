@@ -1,29 +1,39 @@
 <%= form_for(@worker) do |f| %>
-  <% if @worker.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@worker.errors.count, "error") %> prohibited this worker from being saved:</h2>
 
-      <ul>
-      <% @worker.errors.full_messages.each do |message| %>
+<% if @worker.errors.any? %>
+<div id="error_explanation">
+    <h2><%= pluralize(@worker.errors.count, "error") %>
+        prohibited this worker from being saved:</h2>
+
+    <ul>
+        <% @worker.errors.full_messages.each do |message| %>
         <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+        <% end %>
+    </ul>
+</div>
+<% end %>
 
-  <div class="field">
-    <%= f.label :first_name %><br>
-    <%= f.text_field :first_name %>
-  </div>
-  <div class="field">
-    <%= f.label :last_name %><br>
-    <%= f.text_field :last_name %>
-  </div>
-  <div class="field">
-    <%= f.label :cc %><br>
-    <%= f.number_field :cc %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<div class="form-group">
+    <%= f.label :first_name , "Nombres"  %><br/>
+    <%= f.text_field :first_name , placeholder: "Nombres" ,class: "form-control" %>
+</div>
+
+<div class="form-group">
+    <%= f.label :last_name , "Apellidos"  %><br/>
+    <%= f.text_field :last_name , placeholder: "Apellidos" ,class: "form-control" %>
+</div>
+
+<div class="form-group">
+    <%= f.label :cc , "Cedula"  %><br/>
+    <%= f.number_field :cc , placeholder: "Cedula" ,class: "form-control" %>
+</div>
+
+<div class="form-group">
+    <%= f.label :code , "Codigo"  %><br/>
+    <%= f.text_field :code , placeholder: "Codigo" ,class: "form-control" %>
+</div>
+
+<div class="actions">
+    <%= f.submit locals[:button_text] ,class:"btn btn-primary"%>
+</div>
 <% end %>

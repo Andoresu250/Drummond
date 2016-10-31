@@ -32,6 +32,7 @@
                 <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, report, :class => "btn btn-primary" %>
                     <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_report_path(report), :class => "btn btn-warning" %>
+                    <%= link_to '<i class="fa fa-pencil"></i> Descargar'.html_safe, report_path(report, format:"pdf"), :class => "btn btn-success" %>
                 </div>
             </td>
         </tr>
@@ -73,6 +74,7 @@
                 <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, report, :class => "btn btn-primary" %>
                     <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_report_path(report), :class => "btn btn-warning" %>
+                    <%= link_to '<i class="fa fa-pencil"></i> Descargar'.html_safe, report_path(report, format:"pdf"), :class => "btn btn-success" %>
                 </div>
             </td>
         </tr>

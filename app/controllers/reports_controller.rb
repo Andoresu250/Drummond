@@ -1,17 +1,28 @@
 class ReportsController < ApplicationController
-  before_action :set_report, only: [:show, :edit, :update, :destroy]
+  before_action :set_report, only: [:show, :edit, :update, :destroy, :isabsent?]
   before_action :load_references, only: [:new, :edit]
   before_action :authenticate_user!
+  helper_method :isabsent?
   # GET /reports
   # GET /reports.json
   def index
     @my_reports = Report.where(created_by: current_user.worker.id)
     @reports = Report.all
+    respond_to do |format|
+      format.html
+      format.json
+      format.pdf {render template: 'reports/pdf', pdf: 'pdf'}
+    end
   end
 
   # GET /reports/1
   # GET /reports/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.json
+      format.pdf {render template: 'reports/report', pdf: 'report'}
+    end
   end
 
   # GET /reports/new
@@ -74,6 +85,13 @@ class ReportsController < ApplicationController
       format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def isabsent?(worker)
+    @report.absences.each do |absences|
+      return true if absences.worker == worker
+    end
+    return false
   end
 
   private
