@@ -26,7 +26,11 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: "dashboard#index"
+  root to: "reports#index"
+
+  put "/groups/:id/set_current", to: "groups#set_current"
+  put "/workers/:id/fire", to: "workers#fire"
+  put "/workers/:id/contract", to: "workers#contract"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

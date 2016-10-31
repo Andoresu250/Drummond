@@ -17,8 +17,23 @@
     <%= select "group", "group_id_id" , @group_ids.collect {|g| [ g.name, g.id ] }, {include_blank: nil}, class: "form-control" %>
 </div>
 
+<div class="panel panel-default">
+    <div class="panel-heading">Lista</div>
+    <table class="table" id="workersList">
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Cedula</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
 <div class="form-group">
-    <table class="table">
+    <table class="table" id="workersTable">
         <thead>
             <tr>
                 <th>Agregar</th>
@@ -41,10 +56,169 @@
             <% end %>
         </tbody>
     </table>
-
 </div>
 
 <div class="actions">
     <%= f.submit %>
 </div>
 <% end %>
+
+<script type="text/javascript">
+
+    var asd = '<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>';
+    var des = '<i class="fa fa-sort-amount-desc" aria-hidden="true"></i>';
+    var sort = '<i class="fa fa-sort" aria-hidden="true"></i>';
+    var tableId = "#workersTable";
+    var workersJson = [];
+    var worker = {};
+
+    <% @workers.each do |worker| %>
+    worker = {};
+    worker.id = '<%=worker.id%>';
+    worker.code = '<%=worker.code%>';
+    worker.cc = '<%=worker.cc%>';
+    worker.name = '<%=worker.first_name + " " + worker.last_name%>';
+    worker.first_name = '<%=worker.first_name%>';
+    worker.last_name = '<%=worker.last_name%>';
+    workersJson.push(worker);
+    <% end %>
+
+    function setOrderIcon(th) {
+        var i = th.indexOf(">");
+        var text = th.substring(i + 1, th.length);
+        text = text.replace("</th>", "");
+        text = text.includes(asd)
+            ? (text.replace(asd, "").replace(sort, "") + "   " + des)
+            : (text.replace(des, "").replace(sort, "") + "   " + asd);
+        return text
+    }
+
+    function setDefaultIcon(th) {
+        return getText(th) + "   " + sort;
+    }
+
+    function getText(th) {
+        return th.substring(th.indexOf(">") + 1, th.length).replace("</th>", "").replace(asd, "").replace(des, "").replace(sort, "");
+    }
+
+    function addRow(worker) {
+        var row = "";
+        row += "<tr>";
+
+        row += '<input type="hidden" name="group[list][]" id="group_list_" value="' + worker.id + '">'
+
+        row += "<td>";
+        row += worker.code;
+        row += "</td>";
+
+        row += "<td>";
+        row += worker.cc;
+        row += "</td>";
+
+        row += "<td>";
+        row += worker.first_name;
+        row += "</td>";
+
+        row += "<td>";
+        row += worker.last_name;
+        row += "</td>";
+
+        row += "</tr>";
+
+        $("#workersList > tbody:last-child").append(row)
+    }
+
+    function rmRow(worker) {
+        var rows = $("#workersList > tbody > tr");
+        $("#workersList tbody tr").each(function () {
+            if ($(this).find('td:eq(1)').text() == worker.cc) {
+                $(this).closest('tr').remove();
+            }
+        });
+    }
+
+    function getWorkerId(cc) {
+        for (var worker of workersJson) {
+            if (worker.cc == cc) {
+                return worker.id;
+            }
+        }
+        return null;
+    }
+
+    $(document).ready(function () {
+
+        $(tableId).DataTable();
+        $.fn.dataTableExt.oStdClasses["sFilter"] = "my-style-class";
+        $("th").on('click', function () {
+            var th = $(this).get(0).outerHTML;
+            $(tableId + ' th').each(function () {
+                var tht = $(this).get(0).outerHTML;
+                $(this).html("");
+                $(this).append(setDefaultIcon(tht));
+            });
+            $(this).html("");
+            $(this).append(setOrderIcon(th));
+        });
+
+        $("input[type='checkbox']").on("click", function () {
+            var row = $(this).parent().next().next();
+            var worker = {
+                code: $(this).parent().next().html(),
+                cc: $(this).parent().next().next().html(),
+                first_name: $(this).parent().next().next().next().html(),
+                last_name: $(this).parent().next().next().next().next().html(),
+                id: getWorkerId($(this).parent().next().next().html())
+            };
+            var isChecked = $(this).is(':checked');
+            if (isChecked) {
+                addRow(worker);
+            } else {
+                rmRow(worker);
+            }
+        });
+
+        var options = {
+            data: workersJson,
+            getValue: function (element) {
+                return element.name;
+            },
+            list: {
+                match: {
+                    enabled: true
+                },
+                onClickEvent: function () {
+                    var workerSelected = $("input[type=search]").getSelectedItemData();
+                    $("#workersTable tbody tr").each(function () {
+                        if ($(this).find('td:eq(2)').text() == workerSelected.cc) {
+                            if (!$(this).find('input[type=checkbox]').is(':checked')) {
+                                $(this).find('input[type=checkbox]').prop('checked', true);
+                                addRow(workerSelected);
+                            }
+                        }
+                    });
+                },
+                onKeyEnterEvent: function () {
+                    var workerSelected = $("input[type=search]").getSelectedItemData();
+                    $("#workersTable tbody tr").each(function () {
+                        if ($(this).find('td:eq(2)').text() == workerSelected.cc) {
+                            if (!$(this).find('input[type=checkbox]').is(':checked')) {
+                                $(this).find('input[type=checkbox]').prop('checked', true);
+                                addRow(workerSelected);
+                            }
+                        }
+                    });
+                }
+            },
+            template: {
+                type: "description",
+                fields: {
+                    description: "cc"
+                }
+            }
+        };
+
+        $("input[type=search]").easyAutocomplete(options);
+
+    });
+</script>

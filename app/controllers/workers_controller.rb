@@ -1,10 +1,10 @@
 class WorkersController < ApplicationController
-  before_action :set_worker, only: [:show, :edit, :update, :destroy]
+  before_action :set_worker, only: [:show, :edit, :update, :destroy, :fire, :contract]
   before_action :authenticate_user!
   # GET /workers
   # GET /workers.json
   def index
-    @workers = Worker.all 
+    @workers = Worker.all
   end
 
   # GET /workers/1
@@ -47,6 +47,30 @@ class WorkersController < ApplicationController
       else
         format.html { render :edit }
         format.json { render json: @worker.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def fire
+    respond_to do |format|
+      if @worker.update({status: "despedido"})
+        format.html { redirect_to workers_path, notice: 'Worker was successfully updated.' }
+        format.json { render :show, status: :ok, location: workers_path }
+      else
+        format.html { render :edit }
+        format.json { render json: workers_path.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def contract
+    respond_to do |format|
+      if @worker.update({status: "trabajando"})
+        format.html { redirect_to workers_path, notice: 'Worker was successfully updated.' }
+        format.json { render :show, status: :ok, location: workers_path }
+      else
+        format.html { render :edit }
+        format.json { render json: workers_path.errors, status: :unprocessable_entity }
       end
     end
   end

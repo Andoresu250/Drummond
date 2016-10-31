@@ -77,7 +77,7 @@
     </div>
 </div>
 
-<div>
+<div class="row">
     <!-- mostrar aqui "asistenica" -->
     <% unless @report.absences.empty? %>
     <div class="panel panel-default">
@@ -92,8 +92,8 @@
             <tbody>
                 <% @report.absences.each do |abs| %>
                 <tr>
-                    <th class="col-md-4"><%= abs.worker.first_name + " " + abs.worker.last_name %></th>
-                    <th class="col-md-8"><%= abs.comment %></th>
+                    <td class="col-md-4"><%= abs.worker.first_name + " " + abs.worker.last_name %></td>
+                    <td class="col-md-8"><%= abs.comment %></td>
                 </tr>
                 <% end %>
             </tbody>

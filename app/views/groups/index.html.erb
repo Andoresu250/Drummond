@@ -1,13 +1,40 @@
-<h1>Lista de grupos</h1>
+<h1>Lista de grupos ACTUALES</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>Nombre</th>
             <th># Trabajadores</th>
-            <th>Estado</th>
-            <th colspan="3">
-                Acciones</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @current_groups.each do |group| %>
+        <tr>
+            <td><%= group.group_id.name %></td>
+            <td><%= group.workers.count %></td>
+            <td>
+                <div class="">
+                    <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, group, :class => "btn btn-info" %>
+                </div>
+            </td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Grupo'.html_safe, new_group_path, :class => "btn btn-primary" %><br>
+
+<% unless @groups.empty? %>
+<h1>Lista de grupos ANTERIORES</h1>
+
+<table class="table table-striped table-bordered" id="gt">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th># Trabajadores</th>
+            <th>Acciones</th>
         </tr>
     </thead>
 
@@ -16,18 +43,63 @@
         <tr>
             <td><%= group.group_id.name %></td>
             <td><%= group.workers.count %></td>
-            <td><%= group.current %></td>
             <td>
-                <div class="row">
+                <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, group, :class => "btn btn-info" %>
-                    <%= link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe , group, method: :delete, data: { confirm: 'Are you sure?' } , :class => "btn btn-danger"%>
+                    <%= link_to "Convertir en actual", "/groups/#{group.id}/set_current", :class => "btn btn-warning", method: :put %>
                 </div>
             </td>
         </tr>
         <% end %>
     </tbody>
 </table>
+<% end %>
 
 <br>
 
-<%= link_to 'New Group', new_group_path %>
+<script type="text/javascript">
+
+    var asd = '<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>';
+    var des = '<i class="fa fa-sort-amount-desc" aria-hidden="true"></i>';
+    var sort = '<i class="fa fa-sort" aria-hidden="true"></i>';
+    var tableId = "#gt";
+    var ready = false;
+
+    function setOrderIcon(th) {
+        var i = th.indexOf(">");
+        var text = th.substring(i + 1, th.length);
+        text = text.replace("</th>", "");
+        text = text.includes(asd)
+            ? (text.replace(asd, "").replace(sort, "") + "   " + des)
+            : (text.replace(des, "").replace(sort, "") + "   " + asd);
+        return text
+    }
+
+    function setDefaultIcon(th) {
+        return getText(th) + "   " + sort;
+    }
+
+    function getText(th) {
+        return th.substring(th.indexOf(">") + 1, th.length).replace("</th>", "").replace(asd, "").replace(des, "").replace(sort, "");
+    }
+
+    $(document).ready(function () {
+        if (!ready) {
+            $(tableId).DataTable({
+                "initComplete": function (settings, json) {
+                    ready = true;
+                }
+            });
+        }
+        $("th").on('click', function () {
+            var th = $(this).get(0).outerHTML;
+            $(tableId + ' th').each(function () {
+                var tht = $(this).get(0).outerHTML;
+                $(this).html("");
+                $(this).append(setDefaultIcon(tht));
+            });
+            $(this).html("");
+            $(this).append(setOrderIcon(th));
+        });
+    });
+</script>

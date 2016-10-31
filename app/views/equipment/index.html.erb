@@ -1,6 +1,9 @@
 <h1>Lista de Equipos</h1>
 
-<table class="table">
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Equipo'.html_safe, new_equipment_path, :class => "btn btn-primary" %>
+<br></br>
+
+<table class="table table-striped table-bordered" id="equipmentsList">
     <thead>
         <tr>
             <th>Referencia</th>
@@ -14,10 +17,9 @@
         <tr>
             <td><%= equipment.reference %></td>
             <td>
-                <div class="row">
+                <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, equipment_path(equipment), :class => "btn btn-info" %>
                     <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_equipment_path(equipment), :class => "btn btn-warning" %>
-                    <%= link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe, equipment , :class => "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
                 </div>
             </td>
         </tr>
@@ -27,4 +29,43 @@
 
 <br>
 
-<%= link_to '<i class="fa fa-plus"></i> Nuevo Equipo'.html_safe, new_equipment_path, :class => "btn btn-primary" %>
+<script type="text/javascript">
+
+    var asd = '<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>';
+    var des = '<i class="fa fa-sort-amount-desc" aria-hidden="true"></i>';
+    var sort = '<i class="fa fa-sort" aria-hidden="true"></i>';
+    var tableId = "#equipmentsList";
+
+    function setOrderIcon(th) {
+        var i = th.indexOf(">");
+        var text = th.substring(i + 1, th.length);
+        text = text.replace("</th>", "");
+        text = text.includes(asd)
+            ? (text.replace(asd, "").replace(sort, "") + "   " + des)
+            : (text.replace(des, "").replace(sort, "") + "   " + asd);
+        return text
+    }
+
+    function setDefaultIcon(th) {
+        return getText(th) + "   " + sort;
+    }
+
+    function getText(th) {
+        return th.substring(th.indexOf(">") + 1, th.length).replace("</th>", "").replace(asd, "").replace(des, "").replace(sort, "");
+    }
+
+    $(document).ready(function () {
+
+        $(tableId).DataTable();
+        $("th").on('click', function () {
+            var th = $(this).get(0).outerHTML;
+            $(tableId + ' th').each(function () {
+                var tht = $(this).get(0).outerHTML;
+                $(this).html("");
+                $(this).append(setDefaultIcon(tht));
+            });
+            $(this).html("");
+            $(this).append(setOrderIcon(th));
+        });
+    });
+</script>

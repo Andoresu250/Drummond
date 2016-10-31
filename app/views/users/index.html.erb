@@ -1,31 +1,76 @@
 <h1>Lista de Usuarios</h1>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Codigo</th>
-      <th>Cedula</th>
-      <th>Nombres</th>
-      <th>Apellidos</th>
-      <th>Email</th>
-      <th>Tipo</th>
-    </tr>
-  </thead>
+<br>
 
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.worker.code %></td>
-        <td><%= user.worker.cc %></td>
-        <td><%= user.worker.first_name %></td>
-        <td><%= user.worker.last_name %></td>
-        <td><%= user.email %></td>
-        <td><%= user.permission_level %></td>         
-      </tr>
-    <% end %>
-  </tbody>
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Usuario'.html_safe, new_users_admin_path, :class => "btn btn-primary" %>
+
+<br></br>
+
+<table class="table table-striped table-bordered" id="usersTable">
+    <thead>
+        <tr>
+            <th>Codigo</th>
+            <th>Cedula</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Email</th>
+            <th>Tipo</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @users.each do |user| %>
+        <tr>
+            <td><%= user.worker.code %></td>
+            <td><%= user.worker.cc %></td>
+            <td><%= user.worker.first_name %></td>
+            <td><%= user.worker.last_name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.permission_level %></td>
+        </tr>
+        <% end %>
+    </tbody>
 </table>
 
 <br>
 
-<%= link_to '<i class="fa fa-plus"></i> Nuevo Usuario'.html_safe, new_users_admin_path, :class => "btn btn-primary" %>
+<script type="text/javascript">
+
+    var asd = '<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>';
+    var des = '<i class="fa fa-sort-amount-desc" aria-hidden="true"></i>';
+    var sort = '<i class="fa fa-sort" aria-hidden="true"></i>';
+    var tableId = "#usersTable";
+
+    function setOrderIcon(th) {
+        var i = th.indexOf(">");
+        var text = th.substring(i + 1, th.length);
+        text = text.replace("</th>", "");
+        text = text.includes(asd)
+            ? (text.replace(asd, "").replace(sort, "") + "   " + des)
+            : (text.replace(des, "").replace(sort, "") + "   " + asd);
+        return text;
+    }
+
+    function setDefaultIcon(th) {
+        return getText(th) + "   " + sort;
+    }
+
+    function getText(th) {
+        return th.substring(th.indexOf(">") + 1, th.length).replace("</th>", "").replace(asd, "").replace(des, "").replace(sort, "");
+    }
+
+    $(document).ready(function () {
+
+        $(tableId).DataTable();
+        $("th").on('click', function () {
+            var th = $(this).get(0).outerHTML;
+            $(tableId + ' th').each(function () {
+                var tht = $(this).get(0).outerHTML;
+                $(this).html("");
+                $(this).append(setDefaultIcon(tht));
+            });
+            $(this).html("");
+            $(this).append(setOrderIcon(th));
+        });
+    });
+</script>

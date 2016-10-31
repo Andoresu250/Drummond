@@ -1,6 +1,8 @@
 <h1>Lista de trabajadores del
     <%= @group.group_id.name %></h1>
 
+<%= link_to "Convertir en actual", "/groups/#{@group.id}/set_current", :class => "btn btn-warning", method: :put unless @group.current%>
+
 <table class="table">
     <thead>
         <tr>

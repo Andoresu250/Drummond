@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161029052520) do
+ActiveRecord::Schema.define(version: 20161031053556) do
 
   create_table "absences", force: :cascade do |t|
     t.integer  "report_id",  limit: 4
@@ -145,9 +145,10 @@ ActiveRecord::Schema.define(version: 20161029052520) do
     t.string   "first_name", limit: 255
     t.string   "last_name",  limit: 255
     t.integer  "cc",         limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.string   "code",       limit: 255
+    t.string   "status",     limit: 255, default: "trabajando"
   end
 
   add_foreign_key "absences", "reports"

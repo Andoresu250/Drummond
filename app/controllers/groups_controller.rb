@@ -1,10 +1,11 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :set_current]
   before_action :authenticate_user!
   # GET /groups
   # GET /groups.json
   def index
-    @groups = Group.all
+    @groups = Group.where(current: false)
+    @current_groups = Group.where(current: true)
   end
 
   # GET /groups/1
@@ -16,7 +17,7 @@ class GroupsController < ApplicationController
   def new
     @group = Group.new
     @group_ids = GroupId.all
-    @workers = Worker.all
+    @workers = Worker.where.not(code: 0, cc: 0, status: "despedido")
   end
 
   # GET /groups/1/edit
@@ -28,19 +29,12 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     @group.current = true;
-    @group.workers = workers_params[:workers]
+    @group.workers = workers_params[:list]
+
 #=begin
     respond_to do |format|
       if @group.save
-
-        groups = Group.where(group_id_id: @group.group_id_id)
-        groups.each do |group|
-          if group != @group
-            group.current = false
-            group.save!
-          end
-        end
-
+        change_current
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render :show, status: :created, location: @group }
       else
@@ -57,6 +51,7 @@ class GroupsController < ApplicationController
   def update
     respond_to do |format|
       if @group.update(group_params)
+        change_current
         format.html { redirect_to @group, notice: 'Group was successfully updated.' }
         format.json { render :show, status: :ok, location: @group }
       else
@@ -77,6 +72,19 @@ class GroupsController < ApplicationController
     end
   end
 
+  def set_current
+    respond_to do |format|
+      if @group.update({current: true})
+        change_current
+        format.html { redirect_to @group, notice: 'Group was successfully updated.' }
+        format.json { render :show, status: :ok, location: @group }
+      else
+        format.html { render :edit }
+        format.json { render json: @group.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
@@ -89,6 +97,16 @@ class GroupsController < ApplicationController
     end
 
     def workers_params
-      params.require(:group).permit(:workers => [])
+      params.require(:group).permit(:list => [])
+    end
+
+    def change_current
+      groups = Group.where(group_id_id: @group.group_id_id)
+      groups.each do |group|
+        if group != @group
+          group.current = false
+          group.save!
+        end
+      end
     end
 end

@@ -1,35 +1,92 @@
 <h1>Lista de trabajadores</h1>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Codigo</th>
-      <th>Cedula</th>
-      <th>Nombres</th>
-      <th>Apellidos</th>      
-      <th> Acciones </th>
-    </tr>
-  </thead>
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Trabajador'.html_safe, new_worker_path, :class => "btn btn-primary" %>
+<br></br>
 
-  <tbody>
-    <% @workers.each do |worker| %>
-      <tr>
-        <td><%= worker.code %></td>
-        <td><%= worker.cc %></td>
-        <td><%= worker.first_name %></td>
-        <td><%= worker.last_name %></td>
-        
-        <td><div class="row">
-          <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, worker, :class => "btn btn-info" %>
-          <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_worker_path(worker), :class => "btn btn-warning" %>
-          <%= link_to '<i class="fa fa-trash"></i> Eliminar'.html_safe , worker, method: :delete, data: { confirm: 'Are you sure?' } , :class => "btn btn-danger"%>  
-        </div></td>
-        
-      </tr>
-    <% end %>
-  </tbody>
+<table class="table table-striped table-bordered" id="workersList">
+    <thead>
+        <tr>
+            <th>Codigo
+                <i class="fa fa-sort" aria-hidden="true"></i>
+            </th>
+            <th>Cedula
+                <i class="fa fa-sort" aria-hidden="true"></i>
+            </th>
+            <th>Nombres
+                <i class="fa fa-sort" aria-hidden="true"></i>
+            </th>
+            <th>Apellidos
+                <i class="fa fa-sort" aria-hidden="true"></i>
+            </th>
+            <th>Estado
+                <i class="fa fa-sort" aria-hidden="true"></i>
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @workers.each do |worker| %>
+        <tr>
+            <td><%= worker.code %></td>
+            <td><%= worker.cc %></td>
+            <td><%= worker.first_name %></td>
+            <td><%= worker.last_name %></td>
+            <td><%= worker.status %></td>
+            <td>
+                <div class="">
+                    <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_worker_path(worker), :class => "btn btn-warning" %>
+                    <%= link_to '<i class="fa fa-sign-out"></i> Despedir'.html_safe , "/workers/#{worker.id}/fire", method: :put, data: { confirm: 'Are you sure?' } , :class => "btn btn-danger" if worker.status == "trabajando"%>
+                    <%= link_to '<i class="fa fa-check-square-o"></i> Recontratar'.html_safe , "/workers/#{worker.id}/contract", method: :put, data: { confirm: 'Are you sure?' } , :class => "btn btn-success" unless worker.status == "trabajando"%>
+                </div>
+            </td>
+
+        </tr>
+        <% end %>
+    </tbody>
 </table>
 
-<br>
+<br></br>
 
-<%= link_to '<i class="fa fa-plus"></i> Nuevo Trabajador'.html_safe, new_worker_path, :class => "btn btn-primary" %>
+<script type="text/javascript">
+
+    var asd = '<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>';
+    var des = '<i class="fa fa-sort-amount-desc" aria-hidden="true"></i>';
+    var sort = '<i class="fa fa-sort" aria-hidden="true"></i>';
+    var tableId = "#workersList";
+
+    function setOrderIcon(th) {
+        var i = th.indexOf(">");
+        var text = th.substring(i + 1, th.length);
+        text = text.replace("</th>", "");
+        text = text.includes(asd)
+            ? (text.replace(asd, "").replace(sort, "") + "   " + des)
+            : (text.replace(des, "").replace(sort, "") + "   " + asd);
+        return text
+    }
+
+    function setDefaultIcon(th) {
+        return getText(th) + "   " + sort;
+    }
+
+    function getText(th) {
+        return th.substring(th.indexOf(">") + 1, th.length).replace("</th>", "").replace(asd, "").replace(des, "").replace(sort, "");
+    }
+
+    $(document).ready(function () {
+
+        $(tableId).DataTable();
+        $("th").on('click', function () {
+            var th = $(this).get(0).outerHTML;
+            $(tableId + ' th').each(function () {
+                var tht = $(this).get(0).outerHTML;
+                $(this).html("");
+                $(this).append(setDefaultIcon(tht));
+            });
+            $(this).html("");
+            $(this).append(setOrderIcon(th));
+        });
+    });
+</script>
