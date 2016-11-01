@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_filter :authenticate_user!
+  before_action :authenticate_admin!
 
   def index
         @users = User.all
@@ -66,6 +67,14 @@ class UsersController < ApplicationController
       redirect_to root_path
     else
       render "edit"
+    end
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    respond_to do |format|
+      format.html { redirect_to reports_url, notice: 'Report was successfully destroyed.' }
     end
   end
 

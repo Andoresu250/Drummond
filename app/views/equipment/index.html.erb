@@ -1,6 +1,6 @@
 <h1>Lista de Equipos</h1>
 
-<%= link_to '<i class="fa fa-plus"></i> Nuevo Equipo'.html_safe, new_equipment_path, :class => "btn btn-primary" %>
+<%= link_to '<i class="fa fa-plus"></i> Nuevo Equipo'.html_safe, new_equipment_path, :class => "btn btn-primary" if current_user.is_admin? %>
 <br></br>
 
 <table class="table table-striped table-bordered" id="equipmentsList">
@@ -19,7 +19,7 @@
             <td>
                 <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, equipment_path(equipment), :class => "btn btn-info" %>
-                    <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_equipment_path(equipment), :class => "btn btn-warning" %>
+                    <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_equipment_path(equipment), :class => "btn btn-warning" if current_user.is_admin?%>
                 </div>
             </td>
         </tr>

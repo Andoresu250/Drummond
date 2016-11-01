@@ -1,6 +1,7 @@
 class WorkersController < ApplicationController
   before_action :set_worker, only: [:show, :edit, :update, :destroy, :fire, :contract]
   before_action :authenticate_user!
+  before_action :authenticate_admin!
   # GET /workers
   # GET /workers.json
   def index

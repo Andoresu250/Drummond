@@ -28,6 +28,6 @@
     </table>
 </div>
 
-<%= link_to 'Editar', edit_vehicle_path(@vehicle) %>
+<%= link_to 'Editar', edit_vehicle_path(@vehicle) if current_user.is_admin?%>
 |
 <%= link_to 'Volver', vehicles_path %>

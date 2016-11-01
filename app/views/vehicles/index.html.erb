@@ -1,6 +1,6 @@
 <h1>Lista de Vehiculos</h1>
 
-<%= link_to '<i class="fa fa-plus"></i> Nuevo vehiculo'.html_safe, new_vehicle_path, :class => "btn btn-primary" %>
+<%= link_to '<i class="fa fa-plus"></i> Nuevo vehiculo'.html_safe, new_vehicle_path, :class => "btn btn-primary" if current_user.is_admin? %>
 <br></br>
 
 <table class="table table-bordered" id="vehiclesList">
@@ -24,7 +24,7 @@
             <td>
                 <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, vehicle_path(vehicle), :class => "btn btn-info" %>
-                    <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_vehicle_path(vehicle), :class => "btn btn-warning" %>
+                    <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_vehicle_path(vehicle), :class => "btn btn-warning" if current_user.is_admin? %>
                 </div>
             </td>
         </tr>

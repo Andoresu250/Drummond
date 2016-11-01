@@ -224,7 +224,7 @@
 </div>
 
 <div class="actions">
-    <%= f.submit locals[:button_text], class:"btn btn-primary"%>
+    <%= f.submit locals[:button_text], class:"btn btn-primary", disabled:"true"%>
 </div>
 
 <% end %>
@@ -248,15 +248,18 @@
     groups.push(group);
     <% end %>
 
-    console.log(groups);
+    //validaciones
+
+    var validEquipment = false;
 
     function delete_user(row) {
         row.closest('tr').remove();
+        enableBtn();
     }
 
     function createSelectEquipment(name) {
         var se = '<select class="form-control" name="' + name + '[equipments][]" id="' + name + '_equipments_">';
-        se += "<option value>Selec. Equipo</option>";
+        se += "<option value=''>Selec. Equipo</option>";
         <%  @equipments.each do |e| %>
         se += "<option value=" + <%= e.id %> + ">";
         se += '<%= e.reference %>';
@@ -328,7 +331,8 @@
 
         row += '</div>'
         row += "</tr>";
-        $("#observationsTable > tbody:last-child").append(row)
+        $("#observationsTable > tbody:last-child").append(row);
+        $("input[type='submit']").prop('disabled', true);
     }
 
     function addRowTask() {
@@ -348,7 +352,8 @@
 
         row += '</div>'
         row += "</tr>";
-        $("#taskTable > tbody:last-child").append(row)
+        $("#taskTable > tbody:last-child").append(row);
+        $("input[type='submit']").prop('disabled', true);
     }
 
     function addRowShot() {
@@ -365,7 +370,8 @@
 
         row += '</div>'
         row += "</tr>";
-        $("#shotsTable > tbody:last-child").append(row)
+        $("#shotsTable > tbody:last-child").append(row);
+        $("input[type='submit']").prop('disabled', true);
     }
 
     function getGroupByName(name) {
@@ -431,6 +437,65 @@
         }
     }
 
+    function isValidequipmentValues() {
+        var valid = true;
+        $('[id="observations_equipments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidequipmentComments() {
+        var valid = true;
+        $('[id="observations_comments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidTaskValues() {
+        var valid = true;
+        $('[id="tasks_equipments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidTaskComments() {
+        var valid = true;
+        $('[id="tasks_comments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function isValidShotComments() {
+        var valid = true;
+        $('[id="shots_comments_"]').each(function () {
+            var sw = ($(this).val() == "");
+            if (sw) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+
+    function enableBtn() {
+        $("input[type='submit']").prop('disabled', !(isValidequipmentValues() && isValidequipmentComments() && isValidTaskValues() && isValidTaskComments() && isValidShotComments()));
+    }
+
     $(document).ready(function () {
         addRowObservation();
         addRowTask();
@@ -453,6 +518,26 @@
             } else {
                 row.html("");
             }
+        });
+
+        $("#observationsTable").on("change", "#observations_equipments_", function (e) {
+            enableBtn();
+        });
+
+        $("#observationsTable").on("input", "#observations_comments_", function (e) {
+            enableBtn();
+        });
+
+        $("#taskTable").on("change", "#tasks_equipments_", function (e) {
+            enableBtn();
+        });
+
+        $("#taskTable").on("input", "#tasks_comments_", function (e) {
+            enableBtn();
+        });
+
+        $("#shotsTable").on("input", "#shots_comments_", function (e) {
+            enableBtn();
         });
 
     });

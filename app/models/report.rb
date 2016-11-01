@@ -18,6 +18,8 @@ class Report < ActiveRecord::Base
   after_update :save_shots
   after_update :update_vehicle_statuses
 
+  validates :shift, :date, :group_id, :created_by, presence: true
+
   def observations=(value)
     @obs = value
   end

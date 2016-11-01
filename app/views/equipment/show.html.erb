@@ -28,6 +28,6 @@
     </table>
 </div>
 
-<%= link_to 'Editar', edit_equipment_path(@equipment) %>
+<%= link_to 'Editar', edit_equipment_path(@equipment) if current_user.is_admin?%>
 |
 <%= link_to 'Volver', equipment_index_path %>

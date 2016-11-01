@@ -1,44 +1,41 @@
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="row">
+<div class="row">
     <div class="col-sm-6 col-sm-offset-3 form-box">
-      <div class="form-top">
-        <div class="form-top-left">
-          <h3>Ingresa a Drummond</h3>
-              <p>Ingresa tu Email y tu contraseña para logearte:</p>
-          </div>
-          <div class="form-top-right">
-              <%= image_tag("logo.jpg", :alt => "", :height => "75", :width => "75") %>
-          </div>
+        <div class="form-top">
+            <div class="form-top-left">
+                <h3>Ingresa a Drummond</h3>
+                <p>Ingresa tu Email y tu contraseña para logearte:</p>
+            </div>
+            <div class="form-top-right">
+                <%= image_tag("logo.jpg", :alt => "", :height => "75", :width => "75") %>
+            </div>
         </div>
         <div class="form-bottom">
-          <form role="form" action="" method="post" class="login-form">
-            <div class="form-group">
-              <%= f.label :email, class:"sr-only" %><br />
-              <%= f.email_field :email, autofocus: true, placeholder:"Email...", class:"form-username form-control" %>  
-            </div>
-            <div class="form-group">
-              <%= f.label :password, class:"sr-only" %><br />
-              <%= f.password_field :password, autocomplete: "off", placeholder:"Password...", class:"form-password form-control" %>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <% if devise_mapping.rememberable? -%>    
-                    <%= f.check_box :remember_me %>
-                    <%= f.label :remember_me , "Recuerdame" %>                  
-                <% end -%>
-              </div>
-              <div class="col-md-6">
-                <%= f.submit "Log in", class:"btn btn-primary btn-block pull-right" %>    
-              </div>              
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <%= render "devise/shared/links" %>               
-              </div>
-            </div>            
-          </form>
+            <form role="form" action="" method="post" class="login-form">
+                <div class="form-group">
+                    <%= f.label :email, class:"sr-only" %><br/>
+                    <%= f.email_field :email, autofocus: true, placeholder:"Email...", class:"form-username form-control" %>
+                </div>
+                <div class="form-group">
+                    <%= f.label :password, class:"sr-only" %><br/>
+                    <%= f.password_field :password, autocomplete: "off", placeholder:"Password...", class:"form-password form-control" %>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <% if devise_mapping.rememberable? -%>
+                        <%= f.check_box :remember_me %>
+                        <%= f.label :remember_me , "Recuerdame" %>
+                        <% end -%>
+                    </div>
+                    <div class="col-md-6">
+                        <%= f.submit "Log in", class:"btn btn-primary btn-block pull-right" %>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"></div>
+                </div>
+            </form>
         </div>
     </div>
-  </div>  
+</div>
 <% end %>
-

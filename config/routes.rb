@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :equipment
   resources :vehicles
   devise_for :users
-  resources :dashboard
+  #resources :dashboard
 
   resources :users_admin, :controller => 'users'
   # The priority is based upon order of creation: first created -> highest priority.

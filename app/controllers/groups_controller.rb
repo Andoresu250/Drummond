@@ -46,24 +46,10 @@ class GroupsController < ApplicationController
   end
 
   # PATCH/PUT /groups/1
-  # PATCH/PUT /groups/1.json
-  #TODO: quitar update
-  def update
-    respond_to do |format|
-      if @group.update(group_params)
-        change_current
-        format.html { redirect_to @group, notice: 'Group was successfully updated.' }
-        format.json { render :show, status: :ok, location: @group }
-      else
-        format.html { render :edit }
-        format.json { render json: @group.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # PATCH/PUT /groups/1.json  
 
   # DELETE /groups/1
   # DELETE /groups/1.json
-  # TODO: quitar destroy
   def destroy
     @group.destroy
     respond_to do |format|
