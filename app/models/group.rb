@@ -12,8 +12,10 @@ class Group < ActiveRecord::Base
   end
 
   def save_workers
-    @workers.each do |worker_id|
-      HasWorker.create(group_id: self.id, worker_id: worker_id)
+    unless @workers.nil?
+      @workers.each do |worker_id|
+        HasWorker.create(group_id: self.id, worker_id: worker_id)
+      end
     end
   end
 
