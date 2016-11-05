@@ -30,6 +30,15 @@
                 <strong>Grupo:
                 </strong><%= link_to @report.group.group_id.name, @report.group %></p>
         </div>
+        <div class="form-group">
+            <p>
+                <strong>Incidentes:</strong>
+                <% if @report.incident %>
+                    Si
+                <% else %>
+                    No
+                <% end %>
+        </div>
     </div>
     <div class="col-md-9">
 
@@ -52,7 +61,7 @@
                     <td>JOL:</td>
                     <td><%= @report.group.workers.where(code: "JOL").count %></td>
                     <td>Junior</td>
-                    <td><%= @report.junior.first_name + " " + @report.junior.last_name unless @report.senior.nil? %></td>
+                    <td><%= @report.junior.first_name + " " + @report.junior.last_name unless @report.junior.nil? %></td>
                 </tr>
                 <tr>
                     <td>Ausentes:</td>
@@ -81,7 +90,11 @@
     <!-- mostrar aqui "asistenica" -->
     <% unless @report.absences.empty? %>
     <div class="panel panel-default">
-        <div class="panel-heading">Ausencias</div>
+        <div class="panel-heading">
+            <center>
+                <b>Ausencias</b>
+            </center>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -195,13 +208,13 @@
 <% unless @report.shots.empty? %>
 <div class="row">
     <div class="panel panel-default">
-        <div class="panel-heading">Voladuras</div>
+        <div class="panel-heading">
+            <center>
+                <b>Voladuras</b>
+            </center>
+        </div>
         <table class="table">
-            <thead>
-                <tr>
-                    <th></th>
-                </tr>
-            </thead>
+            
             <tbody>
                 <% @report.shots.each do |shot| %>
                 <tr>
@@ -275,6 +288,33 @@
         </div>
     </div>
 </div>
+
+<% if @report.incident %>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <center>
+                <b>Incidente:</b>
+            </center>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Descripcion:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <%=@report.incident_comment%>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<% end %>
+
 
 <div class="row">
     <div class="panel panel-default">

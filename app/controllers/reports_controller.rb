@@ -112,7 +112,7 @@ class ReportsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def report_params
-      params.require(:report).permit(:shift, :date, :group_id, :senior_id, :junior_id)
+      params.require(:report).permit(:shift, :date, :group_id, :senior_id, :junior_id, :incident, :incident_comment)
     end
 
     def observations_params

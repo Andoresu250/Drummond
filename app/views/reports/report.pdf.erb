@@ -60,6 +60,15 @@
                     <strong>Grupo:
                     </strong><%= @report.group.group_id.name %>
                 </div>
+                <div class="form-group">
+                    <p>
+                        <strong>Incidentes:</strong>
+                        <% if @report.incident %>
+                            Si
+                        <% else %>
+                            No
+                        <% end %>
+                </div>
             </div>
             <div class="col-md-9">
 
@@ -82,7 +91,7 @@
                             <td>JOL:</td>
                             <td><%= @report.group.workers.where(code: "JOL").count %></td>
                             <td>Junior</td>
-                            <td><%= @report.junior.first_name + " " + @report.junior.last_name unless @report.senior.nil? %></td>
+                            <td><%= @report.junior.first_name + " " + @report.junior.last_name unless @report.junior.nil? %></td>
                         </tr>
                         <tr>
                             <td>Ausentes:</td>
@@ -111,7 +120,11 @@
             <!-- mostrar aqui "asistenica" -->
             <% unless @report.absences.empty? %>
             <div class="panel panel-default">
-                <div class="panel-heading">Ausencias</div>
+                <div class="panel-heading">
+                    <center>
+                        <b>Ausencias</b>
+                    </center>
+                </div>
                 <table class="table">
                     <thead>
                         <tr>
@@ -225,7 +238,11 @@
         <% unless @report.shots.empty? %>
         <div class="row">
             <div class="panel panel-default">
-                <div class="panel-heading">Voladuras</div>
+                <div class="panel-heading">
+                    <center>
+                        <b>Voladuras</b>
+                    </center>
+                </div>
                 <table class="table">
                     <thead>
                         <tr>
@@ -250,6 +267,32 @@
             </strong>
         </div>
         <br>
+        <% end %>
+        
+        <% if @report.incident %>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <center>
+                        <b>Incidente:</b>
+                    </center>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Descripcion:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <%=@report.incident_comment%>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <% end %>
 
         <div class="row">
@@ -284,48 +327,6 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <center>
-                        <b>Lista de trabajadores presentes</b>
-                    </center>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Codigo</th>
-                            <th>Cedula</th>
-                            <th>Nombre</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% unless @report.senior.nil? %>
-                        <tr>
-                            <td><%= @report.senior.code %></td>
-                            <td><%= @report.senior.cc %></td>
-                            <td><%= @report.senior.first_name + " " + @report.senior.last_name %></td>
-                        </tr>
-                        <% end %>
-                        <% unless @report.junior.nil? %>
-                        <tr>
-                            <td><%= @report.junior.code %></td>
-                            <td><%= @report.junior.cc %></td>
-                            <td><%= @report.junior.first_name + " " + @report.junior.last_name %></td>
-                        </tr>
-                        <% end %>
-                        <% @report.group.workers.each do |worker| %>
-                        <% unless isabsent?(worker) %>
-                        <tr>
-                            <td><%= worker.code %></td>
-                            <td><%= worker.cc %></td>
-                            <td><%= worker.first_name + " " + worker.last_name %></td>
-                        </tr>
-                        <% end %>
-                        <% end %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        
     </body>
 </html>

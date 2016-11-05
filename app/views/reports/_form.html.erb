@@ -28,6 +28,9 @@
             <%= f.label :group_id, "Grupo: "  %><br/>
             <%= f.select :group_id  , @current_groups.collect {|g| [ g.group_id.name , g.id ] }, {include_blank: nil}, class: "form-control" %>
         </div>
+        <div class="form-group">
+            <%= f.label :incident, "Incidente: "  %> <%= f.check_box :incident %>
+        </div>
 
     </div>
     <div class="col-md-9">
@@ -41,11 +44,11 @@
             <tbody>
                 <tr>
                     <td>Senior</td>
-                    <td><%= f.select :senior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.id ] }, {include_blank: "---"}, class: "form-control" %></td>
+                    <td><%= f.select :senior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.worker.id ] }, {include_blank: "---"}, class: "form-control" %></td>
                 </tr>
                 <tr>
                     <td>Junior</td>
-                    <td><%= f.select :junior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.id ] }, {include_blank: "---"}, class: "form-control" %></td>
+                    <td><%= f.select :junior_id  , @sups.collect {|s| [ s.worker.first_name + " " + s.worker.last_name, s.worker.id ] }, {include_blank: "---"}, class: "form-control" %></td>
                 </tr>
             </tbody>
         </table>
@@ -56,6 +59,30 @@
             Mostrar lista de trabajadores
         </span>
 
+    </div>
+</div>
+
+<div class="row" id="incident_row" >
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <center>
+                <b>Incidente:</b>
+            </center>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Descripcion:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <%= f.text_area :incident_comment , class: "form-control"%>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -501,6 +528,8 @@
         addRowTask();
         addRowShot();
         generateWorkersList(getGroupName());
+        
+        $("#incident_row").hide();
 
         $('#report_group_id').on('change', function () {
             generateWorkersList(getGroupName());
@@ -517,6 +546,14 @@
                 row.append(createTextArea("absences"));
             } else {
                 row.html("");
+            }
+        });
+        
+        $("#report_incident").on("change", function(){
+            if($("#report_incident").is(':checked')){
+                $("#incident_row").show();
+            }else{
+                $("#incident_row").hide();
             }
         });
 
