@@ -33,6 +33,8 @@ gem 'devise'
 
 gem 'pg'
 
+gem 'time_difference'
+
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 

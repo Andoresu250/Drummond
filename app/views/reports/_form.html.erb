@@ -105,9 +105,11 @@
         <thead>
             <tr>
                 <th class="col-md-2">Equipo</th>
-                <th class="col-md-2">Down</th>
-                <th class="col-md-2">Ready</th>
-                <th class="col-md-5">Comentarios/Observaciones</th>
+                <th class="col-md-1">Down</th>
+                <th class="col-md-1">Ready</th>
+                <th class="col-md-3">Comentarios/Observaciones</th>
+                <th class="col-md-2">Problema principal</th>
+                <th class="col-md-2">Causas</th>
                 <th class="col-md-1"></th>
             </tr>
         </thead>
@@ -115,9 +117,11 @@
             <% @report.observations.each do |observation| %>
             <tr>
                 <td class="col-md-2"><%= observation.equipment.reference %></td>
-                <td class="col-md-2"><%= "#{observation.down.hour < 10 ? ("0"+observation.down.hour.to_s):(observation.down.hour)}:#{observation.down.min < 10 ? ("0"+observation.down.min.to_s):(observation.down.min)}" if !observation.down.nil? %></td>
-                <td class="col-md-2"><%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %></td>
-                <td class="col-md-5"><%= observation.comment %></td>
+                <td class="col-md-1"><%= "#{observation.down.hour < 10 ? ("0"+observation.down.hour.to_s):(observation.down.hour)}:#{observation.down.min < 10 ? ("0"+observation.down.min.to_s):(observation.down.min)}" if !observation.down.nil? %></td>
+                <td class="col-md-1"><%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %></td>
+                <td class="col-md-4"><%= observation.comment %></td>
+                <td class="col-md-2"><%= observation.main_problem %></td>
+                <td class="col-md-2"><%= observation.cause %></td>
                 <td class=""></td>
             </tr>
             <% end %>
@@ -206,11 +210,7 @@
                         <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status), class: "form-control" %>
                     </td>
                     <td>
-                        <% if @vehicles[index].vehicle_statuses.last.nil? %>
                         <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
-                    <% else %>
-                        <%= text_area_tag 'vehicles[location][]', @vehicles[index].vehicle_statuses.last.location ,class: 'form-control' %>
-                        <% end %>
                     </td>
                 </tr>
                 <% end %>
@@ -237,11 +237,9 @@
                         <%= select_tag 'vehicles[status][]', options_for_select(@vehicle_statuses.collect{ |s| [s] }, @vehicles[index].current_status ), class: "form-control" %>
                     </td>
                     <td>
-                        <% if @vehicles[index].vehicle_statuses.last.nil? %>
+                        
                         <%= text_area_tag 'vehicles[location][]', nil ,class: 'form-control' %>
-                    <% else %>
-                        <%= text_area_tag 'vehicles[location][]', @vehicles[index].vehicle_statuses.last.location ,class: 'form-control' %>
-                        <% end %>
+                    
                     </td>
                 </tr>
                 <% end %>
@@ -260,19 +258,48 @@
 
     var groups = [];
     var group;
+    var problemasPrincipales = ["Electrico", "Macanica", "Control", "PM equipos mina", "PM equipos electricos", "Cableado"];
+    
+    var causasElectricas = ["Monitor", "Sobrecorriente instantanea(OL)", "Falla a tierra", "Efecto Corona", 
+                            "Sobrecalentamiento", "Conexiones sueltas/flojas", "Fase perdida", "Banco de condensadores", 
+                            "Equipo de potencia dañado", "Aislamiento defectuoso", "Si falla evidente"];
+    var causasMecanicas = ["Rodamientos", "Vibracion", "Alta temperatura", "Ventilacion defectuosa",
+                            "Desalineamiento", "Engrase"];
+    var causasControl = ["Conexiones flojas", "Mala conexion", "Dispositivo de proteccion dañado", "Variador de velocidad",
+                         "Contactor dañado", "Rele auxiliar dañado"];
+    var causasEquiposMina = ["Circuito de alta", "caja 8x8", "Tambor", "Colector central", "Banco de resistencias",
+                             "Revision de ruta", "Engrase", "Toma de vibracion", "Toma de temperatura", "PT-100", 
+                             "Revision escobillas generadoras", "Revision esbolillas motores", "Revision Ventiladores", 
+                             "Pruebas IP", "Circuito monitor", "Revision variadores", "Revision transformadores", "Limpieza",
+                             "Ajuste conexiones"];
+    var causasEquiposElectricos = ["Limpieza General", "Ajuste conexiones", "Pruebas componentes", "Revision NGR"];
+    
+    //var causas = [causasElectricas, causasElectricas, causasMecanicas, causasControl. causasEquiposMina, causasEquiposElectricos];
+    
+    var causas = {
+        "Electrico": causasElectricas,
+        "Macanica": causasMecanicas,
+        "Control": causasControl,
+        "PM-equipos-mina": causasEquiposMina,
+        "PM-equipos-electricos": causasEquiposElectricos,
+        "Cableado": causasEquiposElectricos
+    };
+    
+    var ausencias = ["Permiso", "Entrenamiento", "Ausente", "Vacaciones", "Incapacidad"];
+                        
     var worker = {};
     <% @current_groups.each do |g| %>
-    group = {};
-    group.workers = [];
-    group.name = '<%= g.group_id.name %>';
-    <% g.workers.each do |w| %>
-    worker = {};
-    worker.id = <%= w.id %>
-    worker.cc = '<%= w.cc %>';
-    worker.name = '<%= w.first_name + " " + w.last_name %>';
-    group.workers.push(worker);
-    <% end %>
-    groups.push(group);
+        group = {};
+        group.workers = [];
+        group.name = '<%= g.group_id.name %>';
+        <% g.workers.each do |w| %>
+            worker = {};
+            worker.id = <%= w.id %>
+            worker.cc = '<%= w.cc %>';
+            worker.name = '<%= w.first_name + " " + w.last_name %>';
+            group.workers.push(worker);
+        <% end %>
+        groups.push(group);
     <% end %>
 
     //validaciones
@@ -294,6 +321,44 @@
         <% end %>
         se += "</select>";
         return se;
+    }
+    
+    function createSelectAbsence(){
+        var se = '<select class="form-control" name="absences[comments][]" id="absences_comments_">';
+        se += "<option value=''>Selec. Motivo</option>";
+        for(var i = 0 ; i < ausencias.length ; i++){
+            se += "<option value=" + ausencias[i].replace(/ /g, "-") + ">";    
+            se += ausencias[i];
+            se += "</option>";
+        }
+        se += "</select>";
+        return se;
+    }
+    
+    function createSelectMainProblem() {
+        var se = '<select class="form-control" name="observations[main][]" id="observations_main_">';
+        se += "<option value=''>Selec. Problema</option>";
+        for(var i = 0 ; i < problemasPrincipales.length ; i++){
+            se += "<option value=" + problemasPrincipales[i].replace(/ /g, "-") + ">";    
+            se += problemasPrincipales[i];
+            se += "</option>";
+        }
+        se += "</select>";
+        return se;
+    }
+    
+    function createSelectCauses(causes) {
+        var se = '<select class="form-control" name="observations[causes][]" id="observations_causes_">';
+        se += "<option value=''>Selec. Causa</option>";
+        if(causes){
+            for(var i = 0 ; i < causes.length ; i++){
+                se += "<option value=" + causes[i].replace(/ /g, "-") + ">";    
+                se += causes[i];
+                se += "</option>";
+            }    
+        }
+        se += "</select>";
+        return se;;
     }
 
     function createTextArea(name) {
@@ -336,23 +401,31 @@
     function addRowObservation() {
         var row = "<tr>";
         row += '<div class="row">'
-        row += '<td class="col-md-2" >';
+        row += '<td class="" >';
         row += createSelectEquipment("observations");
         row += "</td>";
 
-        row += '<td class="col-md-2" >';
+        row += '<td class="" >';
         row += createTimePicker("down");
         row += "</td>";
 
-        row += '<td class="col-md-2" >';
+        row += '<td class="" >';
         row += createTimePicker("ready");
         row += "</td>";
 
-        row += '<td class="col-md-5" >';
+        row += '<td class="" >';
         row += createTextArea("observations");
         row += "</td>";
+        
+        row += '<td class="" >';
+        row += createSelectMainProblem();
+        row += "</td>";
+        
+        row += '<td class="" >';
+        //row += createSelectMainProblem();
+        row += "</td>";
 
-        row += '<td class="col-md-1">';
+        row += '<td class="">';
         row += btnDelete();
         row += '</td>';
 
@@ -522,6 +595,8 @@
     function enableBtn() {
         $("input[type='submit']").prop('disabled', !(isValidequipmentValues() && isValidequipmentComments() && isValidTaskValues() && isValidTaskComments() && isValidShotComments()));
     }
+    
+    
 
     $(document).ready(function () {
         addRowObservation();
@@ -539,11 +614,12 @@
             $("input:checkbox[name='report[absences][]']").prop('checked', false);
         });
 
+        //ESTO ES LO QUE NECESITOO
         $("input[type='checkbox']").on("click", function () {
             var row = $(this).parent().next().next();
             var isChecked = $(this).is(':checked');
             if (isChecked) {
-                row.append(createTextArea("absences"));
+                row.append(createSelectAbsence());
             } else {
                 row.html("");
             }
@@ -555,6 +631,14 @@
             }else{
                 $("#incident_row").hide();
             }
+        });
+        
+        $("#observationsTable").on("change", "#observations_main_", function (e) {
+            var row = $(this).parent().next();
+            var option = $(this).val();
+            var text = $(this).find("option:selected").text();
+            row.html("");
+            row.append(createSelectCauses(causas[option]));
         });
 
         $("#observationsTable").on("change", "#observations_equipments_", function (e) {

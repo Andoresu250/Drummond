@@ -6,7 +6,7 @@
 <div class="panel panel-default">
     <!-- Default panel contents -->
     <div class="panel-heading">Historico</div>
-    <table class="table">
+    <table class="table" id="equipmentHistoric">
         <thead>
             <tr>
                 <th class="col-md-2">Fecha</th>
@@ -31,3 +31,46 @@
 <%= link_to 'Editar', edit_equipment_path(@equipment) if current_user.is_admin?%>
 |
 <%= link_to 'Volver', equipment_index_path %>
+
+<script type="text/javascript">
+
+    var asd = '<i class="fa fa-sort-amount-asc" aria-hidden="true"></i>';
+    var des = '<i class="fa fa-sort-amount-desc" aria-hidden="true"></i>';
+    var sort = '<i class="fa fa-sort" aria-hidden="true"></i>';
+    var tableId = "#equipmentHistoric";
+
+    function setOrderIcon(th) {
+        var i = th.indexOf(">");
+        var text = th.substring(i + 1, th.length);
+        text = text.replace("</th>", "");
+        text = text.includes(asd)
+            ? (text.replace(asd, "").replace(sort, "") + "   " + des)
+            : (text.replace(des, "").replace(sort, "") + "   " + asd);
+        return text
+    }
+
+    function setDefaultIcon(th) {
+        return getText(th) + "   " + sort;
+    }
+
+    function getText(th) {
+        return th.substring(th.indexOf(">") + 1, th.length).replace("</th>", "").replace(asd, "").replace(des, "").replace(sort, "");
+    }
+
+    $(document).ready(function () {
+
+        $(tableId).DataTable();
+        $("th").on('click', function () {
+            var th = $(this).get(0).outerHTML;
+            $(tableId + ' th').each(function () {
+                var tht = $(this).get(0).outerHTML;
+                $(this).html("");
+                $(this).append(setDefaultIcon(tht));
+            });
+            $(this).html("");
+            $(this).append(setOrderIcon(th));
+        });
+    });
+</script>
+
+

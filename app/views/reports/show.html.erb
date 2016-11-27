@@ -126,16 +126,19 @@
         <table class="table" id="observationsTable">
             <thead>
                 <tr>
-                    <th class="col-md-2">Equipo</th>
+                    <th class="col-md-1">Equipo</th>
                     <th class="col-md-1">Down</th>
                     <th class="col-md-1">Ready</th>
-                    <th class="col-md-8">Comentarios/Observaciones</th>
+                    <th class="col-md-1">Minutos</th>
+                    <th class="col-md-4">Comentarios/Observaciones</th>
+                    <th class="col-md-2">Problema Principal</th>
+                    <th class="col-md-2">Causas</th>
                 </tr>
             </thead>
             <tbody>
                 <% @report.observations.each do |observation| %>
                 <tr>
-                    <td class="col-md-2">
+                    <td class="col-md-1">
                         <%= observation.equipment.reference %>
                     </td>
                     <td class="col-md-1">
@@ -144,8 +147,17 @@
                     <td class="col-md-1">
                         <%= "#{observation.ready.hour < 10 ? ("0"+observation.ready.hour.to_s):(observation.ready.hour)}:#{observation.ready.min < 10 ? ("0"+observation.ready.min.to_s):(observation.ready.min)}" if !observation.ready.nil? %>
                     </td>
-                    <td class="col-md-8">
+                    <td class="col-md-1">
+                        <%= TimeDifference.between(observation.ready, observation.down).in_minutes unless observation.ready.nil? || observation.down.nil?%>
+                    </td>
+                    <td class="col-md-4">
                         <%= observation.comment %>
+                    </td>
+                    <td class="col-md-2">
+                        <%= observation.main_problem %>
+                    </td>
+                    <td class="col-md-2">
+                        <%= observation.cause %>
                     </td>
                 </tr>
                 <% end %>

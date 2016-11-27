@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161105195416) do
+ActiveRecord::Schema.define(version: 20161127162220) do
 
   create_table "absences", force: :cascade do |t|
     t.integer  "report_id"
@@ -63,6 +63,8 @@ ActiveRecord::Schema.define(version: 20161105195416) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.integer  "report_id"
+    t.string   "main_problem"
+    t.string   "cause"
   end
 
   add_index "observations", ["equipment_id"], name: "index_observations_on_equipment_id"

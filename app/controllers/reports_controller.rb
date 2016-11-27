@@ -38,6 +38,7 @@ class ReportsController < ApplicationController
   # POST /reports
   # POST /reports.json
   def create
+    
     @report = Report.new(report_params)
     @report.created_by = current_user.worker
     @report.observations = observations_params_to_object
@@ -116,8 +117,8 @@ class ReportsController < ApplicationController
     end
 
     def observations_params
-      params.merge!({:observations => { :down => { :hour => [], :minutes => [] }, :ready => { :hour => [], :minutes => [] }, :comments => [], :equipments => [] }}) unless params.has_key?(:observations)
-      params.require(:observations).permit(:down => [:hour => [], :minutes => []], :ready => [:hour => [], :minutes => []],:comments => [], :equipments => [])
+      params.merge!({:observations => { :down => { :hour => [], :minutes => [] }, :ready => { :hour => [], :minutes => [] }, :comments => [], :equipments => [], :main => [], :causes => [] }}) unless params.has_key?(:observations)
+      params.require(:observations).permit(:down => [:hour => [], :minutes => []], :ready => [:hour => [], :minutes => []],:comments => [], :equipments => [], :main => [], :causes => [])
     end
 
     def taks_params
@@ -144,6 +145,8 @@ class ReportsController < ApplicationController
       observations = Array.new(observations_params[:equipments].size) {Hash.new}
       observations_params[:equipments].each_with_index { |e, index| observations[index].merge!({:equipment_id => e}) }
       observations_params[:comments].each_with_index { |c, index| observations[index].merge!({:comment => c}) }
+      observations_params[:main].each_with_index { |c, index| observations[index].merge!({:main_problem => c.gsub('-', ' ')}) }
+      observations_params[:causes].each_with_index { |c, index| observations[index].merge!({:cause => c.gsub('-', ' ')}) }
       observations_params[:down][:hour].each_with_index { |d, index| observations[index].merge!({:down => (d.empty? || observations_params[:down][:minutes][index].empty?) ? (nil) : (d.to_s + ":" + observations_params[:down][:minutes][index].to_s) }) }
       observations_params[:ready][:hour].each_with_index { |r, index| observations[index].merge!({:ready => (r.empty? || observations_params[:ready][:minutes][index].empty?) ? (nil) : (r.to_s + ":" + observations_params[:ready][:minutes][index].to_s) }) }
       observations
