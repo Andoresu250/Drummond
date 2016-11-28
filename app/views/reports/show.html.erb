@@ -126,13 +126,11 @@
         <table class="table" id="observationsTable">
             <thead>
                 <tr>
-                    <th class="col-md-1">Equipo</th>
-                    <th class="col-md-1">Down</th>
-                    <th class="col-md-1">Ready</th>
-                    <th class="col-md-1">Minutos</th>
+                    <th class="col-md-2">Equipo</th>
+                    <th class="col-md-2">Down</th>
+                    <th class="col-md-2">Ready</th>
+                    <th class="col-md-2">Minutos</th>
                     <th class="col-md-4">Comentarios/Observaciones</th>
-                    <th class="col-md-2">Problema Principal</th>
-                    <th class="col-md-2">Causas</th>
                 </tr>
             </thead>
             <tbody>
@@ -152,12 +150,6 @@
                     </td>
                     <td class="col-md-4">
                         <%= observation.comment %>
-                    </td>
-                    <td class="col-md-2">
-                        <%= observation.main_problem %>
-                    </td>
-                    <td class="col-md-2">
-                        <%= observation.cause %>
                     </td>
                 </tr>
                 <% end %>
@@ -327,50 +319,6 @@
 </div>
 <% end %>
 
-
-<div class="row">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <center>
-                <b>Lista de trabajadores presentes</b>
-            </center>
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Cedula</th>
-                    <th>Nombre</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% unless @report.senior.nil? %>
-                <tr>
-                    <td><%= @report.senior.code %></td>
-                    <td><%= @report.senior.cc %></td>
-                    <td><%= @report.senior.first_name + " " + @report.senior.last_name %></td>
-                </tr>
-                <% end %>
-                <% unless @report.junior.nil? %>
-                <tr>
-                    <td><%= @report.junior.code %></td>
-                    <td><%= @report.junior.cc %></td>
-                    <td><%= @report.junior.first_name + " " + @report.junior.last_name %></td>
-                </tr>
-                <% end %>
-                <% @report.group.workers.each do |worker| %>
-                <% unless isabsent?(worker) %>
-                <tr>
-                    <td><%= worker.code %></td>
-                    <td><%= worker.cc %></td>
-                    <td><%= worker.first_name + " " + worker.last_name %></td>
-                </tr>
-                <% end %>
-                <% end %>
-            </tbody>
-        </table>
-    </div>
-</div>
 
 <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_report_path(@report), :class => "btn btn-warning" %>
 

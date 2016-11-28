@@ -9,10 +9,12 @@
     <table class="table" id="equipmentHistoric">
         <thead>
             <tr>
-                <th class="col-md-2">Fecha</th>
-                <th class="col-md-2">Down</th>
-                <th class="col-md-2">Ready</th>
-                <th class="col-md-6">Comentarios</th>
+                <th class="col-md-1">Fecha</th>
+                <th class="col-md-1">Down</th>
+                <th class="col-md-1">Ready</th>
+                <th class="col-md-3">Comentarios</th>
+                <th class="col-md-3">Problema Principal</th>
+                <th class="col-md-3">Causa</th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +24,8 @@
                 <td><%= "#{eb.down.hour < 10 ? ("0"+eb.down.hour.to_s):(eb.down.hour)}:#{eb.down.min < 10 ? ("0"+eb.down.min.to_s):(eb.down.min)}" if !eb.down.nil? %></td>
                 <td><%= "#{eb.ready.hour < 10 ? ("0"+eb.ready.hour.to_s):(eb.ready.hour)}:#{eb.ready.min < 10 ? ("0"+eb.ready.min.to_s):(eb.ready.min)}" if !eb.ready.nil? %></td>
                 <td><%= eb.comment %></td>
+                <td><%= eb.main_problem %></td>
+                <td><%= eb.cause %></td>
             </tr>
             <% end %>
         </tbody>
