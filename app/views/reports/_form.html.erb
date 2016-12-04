@@ -613,9 +613,9 @@
         $("#haveAbsences").change(function () {
             $("input:checkbox[name='report[absences][]']").prop('checked', false);
         });
-
-        //ESTO ES LO QUE NECESITOO
-        $("input[type='checkbox']").on("click", function () {
+       
+        
+        $("#workersTable").on("change", "#report_absences_", function (e) {
             var row = $(this).parent().next().next();
             var isChecked = $(this).is(':checked');
             if (isChecked) {
