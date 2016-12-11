@@ -1,5 +1,5 @@
 class VehiclesController < ApplicationController
-  before_action :set_vehicle, only: [:show, :edit, :update, :destroy]
+  before_action :set_vehicle, only: [:show, :edit, :update, :destroy, :up, :down]
   before_action :authenticate_user!
   before_action :authenticate_admin!, only:[:edit, :update, :destroy, :new]
   # GET /vehicles
@@ -35,6 +35,30 @@ class VehiclesController < ApplicationController
       else
         format.html { render :new }
         format.json { render json: @vehicle.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  
+  def down
+    respond_to do |format|
+      if @vehicle.update({working: false})
+        format.html { redirect_to vehicles_url, notice: 'Vehicle was successfully updated.' }
+        format.json { render :show, status: :ok, location: workers_path }
+      else
+        format.html { render :edit }
+        format.json { render json: workers_path.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def up
+    respond_to do |format|
+      if @vehicle.update({working: true})
+        format.html { redirect_to vehicles_url, notice: 'Vehicle was successfully updated.' }
+        format.json { render :show, status: :ok, location: workers_path }
+      else
+        format.html { render :edit }
+        
       end
     end
   end

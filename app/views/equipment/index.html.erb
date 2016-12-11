@@ -20,6 +20,8 @@
                 <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, equipment_path(equipment), :class => "btn btn-info" %>
                     <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_equipment_path(equipment), :class => "btn btn-warning" if current_user.is_admin?%>
+                    <%= link_to '<i class="fa fa-sign-out"></i> Dar de baja'.html_safe , "/equipment/#{equipment.id}/down", method: :put, data: { confirm: 'Are you sure?' } , :class => "btn btn-danger" if equipment.working %>
+                    <%= link_to '<i class="fa fa-check-square-o"></i> Reingresar'.html_safe , "/equipment/#{equipment.id}/up", method: :put, data: { confirm: 'Are you sure?' } , :class => "btn btn-success" unless equipment.working%>
                 </div>
             </td>
         </tr>

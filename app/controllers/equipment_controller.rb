@@ -1,5 +1,5 @@
 class EquipmentController < ApplicationController
-  before_action :set_equipment, only: [:show, :edit, :update, :destroy]
+  before_action :set_equipment, only: [:show, :edit, :update, :destroy, :down, :up]
   before_action :authenticate_user!
   before_action :authenticate_admin!, only:[:edit, :update, :destroy, :new]
   # GET /equipment
@@ -35,6 +35,30 @@ class EquipmentController < ApplicationController
       else
         format.html { render :new }
         format.json { render json: @equipment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  
+  def down
+    respond_to do |format|
+      if @equipment.update({working: false})
+        format.html { redirect_to equipment_index_url, notice: 'Equipment was successfully updated.' }
+        format.json { render :show, status: :ok, location: workers_path }
+      else
+        format.html { render :edit }
+        format.json { render json: workers_path.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def up
+    respond_to do |format|
+      if @equipment.update({working: true})
+        format.html { redirect_to equipment_index_url, notice: 'Equipment was successfully updated.' }
+        format.json { render :show, status: :ok, location: workers_path }
+      else
+        format.html { render :edit }
+        
       end
     end
   end

@@ -105,8 +105,8 @@ class ReportsController < ApplicationController
       @report.group_id = current_user.worker.groups.find_by(current: true).id  unless current_user.worker.groups.where(current: true).empty?
       @current_groups = Group.where(current: true)
       @shifts = ["Diurno", "Nocturno"]
-      @equipments = Equipment.order(:reference)
-      @vehicles = Vehicle.all
+      @equipments = Equipment.order(:reference).where(working: true)
+      @vehicles = Vehicle.all.where(working: true)
       @vehicle_statuses = ["down", "ok", "r"]
       @sups = User.all.where.not(email: "admin@admin.com")
     end

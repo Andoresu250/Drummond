@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161127162220) do
+ActiveRecord::Schema.define(version: 20161210192753) do
 
   create_table "absences", force: :cascade do |t|
     t.integer  "report_id"
@@ -25,9 +25,10 @@ ActiveRecord::Schema.define(version: 20161127162220) do
   add_index "absences", ["worker_id"], name: "index_absences_on_worker_id"
 
   create_table "equipment", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.string   "reference"
+    t.boolean  "working",    default: true
   end
 
   create_table "group_ids", force: :cascade do |t|
@@ -142,6 +143,7 @@ ActiveRecord::Schema.define(version: 20161127162220) do
     t.datetime "updated_at",                    null: false
     t.string   "reference"
     t.string   "current_status", default: "ok"
+    t.boolean  "working",        default: true
   end
 
   create_table "workers", force: :cascade do |t|

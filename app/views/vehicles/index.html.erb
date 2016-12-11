@@ -25,6 +25,8 @@
                 <div class="">
                     <%= link_to '<i class="fa fa-eye"></i> Ver'.html_safe, vehicle_path(vehicle), :class => "btn btn-info" %>
                     <%= link_to '<i class="fa fa-pencil"></i> Editar'.html_safe, edit_vehicle_path(vehicle), :class => "btn btn-warning" if current_user.is_admin? %>
+                    <%= link_to '<i class="fa fa-sign-out"></i> Dar de baja'.html_safe , "/vehicles/#{vehicle.id}/down", method: :put, data: { confirm: 'Are you sure?' } , :class => "btn btn-danger" if vehicle.working %>
+                    <%= link_to '<i class="fa fa-check-square-o"></i> Reingresar'.html_safe , "/vehicles/#{vehicle.id}/up", method: :put, data: { confirm: 'Are you sure?' } , :class => "btn btn-success" unless vehicle.working%>
                 </div>
             </td>
         </tr>

@@ -31,6 +31,12 @@ Rails.application.routes.draw do
   put "/groups/:id/set_current", to: "groups#set_current"
   put "/workers/:id/fire", to: "workers#fire"
   put "/workers/:id/contract", to: "workers#contract"
+  
+  put "/equipment/:id/up", to: "equipment#up"
+  put "/equipment/:id/down", to: "equipment#down"
+  
+   put "/vehicles/:id/up", to: "vehicles#up"
+   put "/vehicles/:id/down", to: "vehicles#down"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
